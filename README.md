@@ -3,4 +3,5 @@ Project for a Software Engineering course at SUNY New Paltz
 
 By: Nathan Gopee, CJ Jenks, and Mike Manzi
 
-! [Image of Fibonacci Distributed Computing Platform System Diagram] https://github.com/ndg8743/Software-Engineering-Spring-2024/blob/main/Fibonacci%20Distributed%20Computing%20Platform%20System%20Diagram.jpeg?raw=true
+![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/57da286d-8157-4e7a-bba5-3dc13d5dffba)
+
