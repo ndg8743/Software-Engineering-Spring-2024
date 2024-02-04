@@ -15,7 +15,7 @@ This project is a web application that will generate a fractal image based on th
 ![image](fibonacci_fractal.png)
 
 ## System Diagram
-![image](Fibonacci_Distributed_Computing_Platform_System_Diagram.jpeg)
+![image](![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/9ddcc8a1-94af-45d2-85e6-cbcbfee50eed))
 
 ## Example Input
 ```JSON
