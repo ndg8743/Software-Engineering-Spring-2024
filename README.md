@@ -19,7 +19,7 @@ This project is a web application that will generate a fractal image based on th
 ![image](Fibonacci_Distributed_Computing_Platform_System_Diagram.jpeg)
 
 ## Example Input
-```JSON
+```javascript
 // Input is always primed with a json object discussing payload and output types and data
 // Output is always a json object with the payload data and output data
 
