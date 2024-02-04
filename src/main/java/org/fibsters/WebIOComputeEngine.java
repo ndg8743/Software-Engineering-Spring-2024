@@ -33,6 +33,10 @@ import java.util.Queue;
      * Processes the inputPayloadQueue, creates jobs, and adds them to the jobPool.
      */
     void payloadPoolLoop();
+
+    /**
+     * Creates FibCalcTasks, FibSpiralTasks, or other ComputeJobs from the inputPayload.
+     */
     ArrayList<ComputeJob> createComputeJobsFromInputPayload(InputPayload inputPayload);
 
     /**
