@@ -1,6 +1,7 @@
 package org.fibsters;
 
-import com.sun.net.httpserver.*;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -19,19 +20,19 @@ import java.util.Queue;
     // TODO: Figure out if pass through methods are the best way to do this. ¯\_(ツ)_/¯
     /** Passes the input payload to the data storage layer to be sanitized and validated. */
     Result<InputPayload> parseInputPayload(String inputPayloadString);
-    public Result<OutputPayload> parseOutputPayload(ComputeJob CompletedJob);
+    public Result<OutputPayload> parseOutputPayload(ComputeJob completedJob);
 
     /* ---------------- Process methods. ---------------- */
     /**
      * Checks for new jobs, processes them, and updates the job pool.
      * Checks for completed jobs, updates the job pool, and sends the results to the client.
      */
-    void JobPoolLoop();
+    void jobPoolLoop();
 
     /**
      * Processes the inputPayloadQueue, creates jobs, and adds them to the jobPool.
      */
-    void PayloadPoolLoop();
+    void payloadPoolLoop();
     ArrayList<ComputeJob> createComputeJobsFromInputPayload(InputPayload inputPayload);
 
     /**
@@ -47,35 +48,6 @@ import java.util.Queue;
     public void handleResponse(HttpExchange exchange) throws IOException;
     public void handleGetRequest(HttpExchange exchange) throws IOException;
     public void handlePostRequest(HttpExchange exchange) throws IOException;
-}
-interface ComputeJobPool {
-    // i.e. public class MyComputeJobPool implements ComputeJobPool { ... } blah blah
-    void addJob(ComputeJob job);
-    void removeJob(ComputeJob job);
-    void processJob(ComputeJob job);
-    void processAllJobs();
-    void getJobStatus(ComputeJob job);
-    void getJobResults(ComputeJob job);
-}
-interface ComputeJob extends Runnable {
-    void setInputPayload(InputPayload inputPayload);
-    void getInputPayload();
-
-}
-interface ComputeJobStatus {
-    public String getStatus();
-    public String getErrorMessage();
-    public String getErrorType();
-}
-
-// Generic wrapper interface for the result of a computation.
-// There will be a SuccessResult and a FailureResult class that implement this interface.
-// i.e. public class SuccessResult<T> implements Result<T> { ... }
-// Then in processPayload, we can return a new SuccessResult or FailureResult.
-interface Result<T> {
-    boolean isSuccess();
-    T getData();
-    String getErrorMessage();
 }
 
 
