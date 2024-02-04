@@ -59,6 +59,6 @@ This project is a web application that will generate a fractal image based on th
 ```
 =======
 ## Prototype Code
-[Prototype Code](legacy/)
+[Prototype Code](/src/main/java/org/legacy/)
 Written without api. Quick and dirty.
 =======
