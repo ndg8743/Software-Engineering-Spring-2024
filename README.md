@@ -41,7 +41,7 @@ This project is a web application that will generate a fractal image based on th
 }
 ```
 ## Example Output
-```JSON
+```javascript
 // Example outputs:
 {
   outputType: "json", // type of payload data
