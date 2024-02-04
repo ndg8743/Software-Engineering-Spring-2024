@@ -1,3 +1,8 @@
+### Custom ###
+fibonacci_fractal.png
+
+
+### BoilerPlate ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

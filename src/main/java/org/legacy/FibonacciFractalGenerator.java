@@ -1,7 +1,11 @@
+package org.legacy;
+
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.ExecutorService;
@@ -94,6 +98,8 @@ public class FibonacciFractalGenerator {
                     deltaXY[0] = previousFib;
                     deltaXY[1] = -previousPreviousFib;
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + angle);
             }
 
             System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
@@ -107,8 +113,9 @@ public class FibonacciFractalGenerator {
             double scaledY = (y * scale) + (centerY);
             double scaledFib = (currentFib * scale);
 
-            if (scaledFib != 0)
+            if (scaledFib != 0) {
                 executor.submit(new FractalDrawingTask(image, scaledX, scaledY, angle, scaledFib, currentFib));
+            }
 
             angle += 90;
             angle %= 360;
@@ -190,16 +197,16 @@ public class FibonacciFractalGenerator {
     static class FractalDrawingTask implements Runnable {
 
         private final BufferedImage image;
-        private final double x;
-        private final double y;
+        private final double posX;
+        private final double posY;
         private final int angle;
         private final double scaledFib;
         private final double currentFib;
 
-        public FractalDrawingTask(BufferedImage image, double x, double y, int angle, double scaledFib, double currentFib) {
+        public FractalDrawingTask(BufferedImage image, double posX, double posY, int angle, double scaledFib, double currentFib) {
             this.image = image;
-            this.x = x;
-            this.y = y;
+            this.posX = posX;
+            this.posY = posY;
             this.angle = angle;
             this.scaledFib = scaledFib;
             this.currentFib = currentFib;
@@ -212,28 +219,28 @@ public class FibonacciFractalGenerator {
 
             synchronized (image) {
                 // draw a dot at the center of the image
-                double arcX = x;
-                double arcY = y;
+                double arcX = posX;
+                double arcY = posY;
 
                 if (angle == 0) {
-                    arcX = x - scaledFib;
-                    arcY = y;
+                    arcX = posX - scaledFib;
+                    arcY = posY;
                     graphics.setColor(Color.GRAY);
                 } else if (angle == 90) {
-                    arcX = x;
-                    arcY = y;
+                    arcX = posX;
+                    arcY = posY;
                     graphics.setColor(Color.WHITE);
                 } else if (angle == 180) {
-                    arcX = x;
-                    arcY = y - scaledFib;
+                    arcX = posX;
+                    arcY = posY - scaledFib;
                     graphics.setColor(Color.ORANGE);
                 } else if (angle == 270) {
-                    arcX = x - scaledFib;
-                    arcY = y - scaledFib;
+                    arcX = posX - scaledFib;
+                    arcY = posY - scaledFib;
                     graphics.setColor(Color.GREEN);
                 }
 
-                Shape shape = new BigIntRectangle(toBigInt(x), toBigInt(y), toBigInt(scaledFib), toBigInt(scaledFib));
+                Shape shape = new BigIntRectangle(toBigInt(posX), toBigInt(posY), toBigInt(scaledFib), toBigInt(scaledFib));
 
                 graphics.draw(shape);
                 graphics.setColor(Color.RED);
@@ -242,7 +249,7 @@ public class FibonacciFractalGenerator {
 
                 graphics.draw(arc);
 
-                graphics.drawString(Double.toString(currentFib), (int) (x + scaledFib / 2), (int) (y + scaledFib / 2));
+                graphics.drawString(Double.toString(currentFib), (int) (posX + scaledFib / 2), (int) (posY + scaledFib / 2));
             }
 
             graphics.dispose();
