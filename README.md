@@ -9,13 +9,13 @@ By: Nathan Gopee, CJ Jenks, and Mike Manzi
 - [Example Output](#example-output)
 
 ## Project Description
-This project is a web application that will generate a fractal image based on the Fibonacci sequence. The user will input a number, and the application will generate a fractal construction data and raw image based on the Fibonacci sequence up to that number. Clientside, the application will allow for scaling and panning of the fibonacci fractal.
+This project is a web application that will generate a fractal image based on the Fibonacci sequence. The user will input a number, and the application will generate a fractal construction data and raw image based on the Fibonacci sequence up to that number. Clientside, the application will allow for scaling and panning of the Fibonacci fractal.
 
 ## Example Fractal Spiral
 ![image](fibonacci_fractal.png)
 
 ## System Diagram
-![image](![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/9ddcc8a1-94af-45d2-85e6-cbcbfee50eed))
+![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/515e890f-0d90-4f22-86fb-5e955e6435e7)
 
 ## Example Input
 ```JSON
