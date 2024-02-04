@@ -57,8 +57,6 @@ This project is a web application that will generate a fractal image based on th
   payloadData: "1,1,2,3,5,8,...;[0,0], [0,1], [-1,-2],...;base64encodedstring", // csv string
 }
 ```
-=======
+
 ## Prototype Code
-[Prototype Code](/src/main/java/org/legacy/)
-Written without api. Quick and dirty.
-=======
+[Click to view](/src/main/java/org/legacy/) Written without full api implementation. This is a quick and dirty demonstration of what the code should look like.
