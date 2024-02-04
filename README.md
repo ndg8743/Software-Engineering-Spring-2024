@@ -7,18 +7,19 @@ By: Nathan Gopee, CJ Jenks, and Mike Manzi
 - [System Diagram](#system-diagram)
 - [Example Input](#example-input)
 - [Example Output](#example-output)
+- [Prototype Code](#prototype-code)
 
 ## Project Description
 This project is a web application that will generate a fractal image based on the Fibonacci sequence. The user will input a number, and the application will generate a fractal construction data and raw image based on the Fibonacci sequence up to that number. Clientside, the application will allow for scaling and panning of the Fibonacci fractal.
 
-## Example Fractal Spiral
-![image](fibonacci_fractal.png)
+## Example Fractal Spiral(from prototype code)
+![image](fibonacci_fractal_legacy.png)
 
 ## System Diagram
 ![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/515e890f-0d90-4f22-86fb-5e955e6435e7)
 
 ## Example Input
-```JSON
+```javascript
 // Input is always primed with a json object discussing payload and output types and data
 // Output is always a json object with the payload data and output data
 
@@ -40,7 +41,7 @@ This project is a web application that will generate a fractal image based on th
 }
 ```
 ## Example Output
-```JSON
+```javascript
 // Example outputs:
 {
   outputType: "json", // type of payload data
@@ -56,3 +57,8 @@ This project is a web application that will generate a fractal image based on th
   payloadData: "1,1,2,3,5,8,...;[0,0], [0,1], [-1,-2],...;base64encodedstring", // csv string
 }
 ```
+=======
+## Prototype Code
+[Prototype Code](legacy/)
+Written without api. Quick and dirty.
+=======
