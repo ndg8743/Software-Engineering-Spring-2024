@@ -1,6 +1,6 @@
-package org.fibsters;
+package org.fibsters.interfaces;
 
-interface ComputeJobPool {
+public interface ComputeJobPool {
     // i.e. public class MyComputeJobPool implements ComputeJobPool { ... } blah blah
     void addJob(ComputeJob job);
 

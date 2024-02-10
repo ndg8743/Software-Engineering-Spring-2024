@@ -1,10 +1,9 @@
-package org.fibsters;
+package org.fibsters.interfaces;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Queue;
 
 /** Handles the request and returns the response.
  * Initalization, reading the request, and writing the response are all handled by the WebIO server.

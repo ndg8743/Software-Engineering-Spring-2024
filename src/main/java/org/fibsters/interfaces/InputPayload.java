@@ -1,6 +1,6 @@
-package org.fibsters;
+package org.fibsters.interfaces;
 
-interface InputPayload extends Payload {
+public interface InputPayload extends Payload {
     public String getUUID();
     public String getInputType();
     String inputType = "defaultInputType";

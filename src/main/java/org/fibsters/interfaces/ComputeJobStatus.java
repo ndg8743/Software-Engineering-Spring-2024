@@ -1,4 +1,4 @@
-package org.fibsters;
+package org.fibsters.interfaces;
 
 interface ComputeJobStatus {
     public String getStatus();
