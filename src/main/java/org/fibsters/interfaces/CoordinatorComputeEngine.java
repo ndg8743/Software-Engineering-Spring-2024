@@ -2,6 +2,8 @@ package org.fibsters.interfaces;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.fibsters.ComputeJobStatus;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,14 +32,20 @@ import java.util.ArrayList;
     /**
      * Creates FibCalcTasks, FibSpiralTasks, or other ComputeJobs from the inputPayload.
      */
-    ArrayList<ComputeJob> createComputeJobsFromInputPayload(InputPayload inputPayload);
 
-    /**
-     * Calls parseOutputPayload in the dataStorage layer.
-     * Removes the job from the jobPool.
-     * Sends back OutputPayload to the client ( with whatever status it has ).
-     */
-    void processCompletedJob(ComputeJob job);
+      ComputeJob createComputeJobFromInputPayload(InputPayload inputPayload);
+
+      /**
+        * Calls parseOutputPayload in the dataStorage layer.
+        * Removes the job from the jobPool.
+        * Sends back OutputPayload to the client ( with whatever status it has ).
+        */
+       void processCompletedJob(ComputeJob job);
+
+
+      void queueJob(ComputeJob job);
+
+      ComputeJobStatus getJobStatus(ComputeJob job);
  }
 
 

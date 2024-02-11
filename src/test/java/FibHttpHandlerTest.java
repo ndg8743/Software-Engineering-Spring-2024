@@ -1,5 +1,4 @@
 import org.fibsters.*;
-import org.fibsters.interfaces.*;
 
 import com.sun.net.httpserver.HttpExchange;
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ import java.io.InputStream;
 import static org.mockito.Mockito.*;
 
 // Mockito Smoke Tests
-public class SmokeTests {
+public class FibHttpHandlerTest {
     @Test
     public void testFibHttpHandler() throws IOException {
         /* ---- Test improper inputPayload Format ---- */
@@ -47,7 +46,7 @@ public class SmokeTests {
         assert responseJSON.getBoolean("success") == false;
 
         /* ---- Test proper inputPayload Format ---- */
-        JSONObject ProperInputPayloadJSON = TestHelpers.getProperInputPayload();
+        JSONObject ProperInputPayloadJSON = TestHelpers.getProperInputConfig(null);
 
         inputString = ProperInputPayloadJSON.toString();
         responseStreamo =

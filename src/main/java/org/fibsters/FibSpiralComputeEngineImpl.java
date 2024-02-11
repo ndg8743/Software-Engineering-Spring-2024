@@ -2,11 +2,17 @@ package org.fibsters;
 
 import org.fibsters.interfaces.FibSpiralComputeEngine;
 import org.fibsters.interfaces.InputPayload;
+import org.fibsters.interfaces.OutputPayload;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     @Override
     public void setInputPayload(InputPayload inputPayload) {
 
+    }
+
+    @Override
+    public OutputPayload getOutputPayload() {
+        return null;
     }
 
     @Override

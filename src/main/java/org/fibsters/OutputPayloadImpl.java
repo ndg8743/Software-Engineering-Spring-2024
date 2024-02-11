@@ -4,7 +4,31 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class OutputPayloadImpl implements OutputPayload {
+    int index;
+    InputPayload inputPayload;
+    ComputeJobStatus status;
+    List<List<Integer>> fibCalcResults;
+
+
+
+    public OutputPayloadImpl(int index, InputPayload inputPayload, ComputeJobStatus status) {
+        this.index = index;
+        this.inputPayload = inputPayload;
+        this.status = status;
+    }
+    @Override
+    public Integer getIndex() {
+        return null;
+    }
+
+    @Override
+    public void setIndex(Integer index) {
+
+    }
+
     @Override
     public InputPayload getInputPayload() {
         return null;
@@ -16,27 +40,13 @@ public class OutputPayloadImpl implements OutputPayload {
     }
 
     @Override
-    public String getDelimiter() {
+    public List<List<Integer>> getFibCalcResults() {
         return null;
     }
 
     @Override
-    public JSONObject getPayloadData() {
-        return null;
-    }
-
-    @Override
-    public String getOutputType() {
-        return null;
-    }
-
-    @Override
-    public String getOutputSource() {
-        return null;
-    }
-
-    @Override
-    public void printPayload() {
+    public void setFibCalcResults(List<List<Integer>> fibCalcResults) {
 
     }
+
 }

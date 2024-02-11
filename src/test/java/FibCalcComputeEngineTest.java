@@ -1,17 +1,12 @@
 import org.fibsters.ComputeJobStatus;
-import org.fibsters.CoordinatorComputeEngineImpl;
 import org.fibsters.FibCalcComputeEngineImpl;
 import org.fibsters.InputPayloadImpl;
-import org.fibsters.interfaces.ComputeJob;
-import org.fibsters.interfaces.CoordinatorComputeEngine;
-import org.fibsters.interfaces.InputPayload;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
+
 public class FibCalcComputeEngineTest {
-
-
     @Test
     public void testFibCalcComputeEngine() {
         FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl();
@@ -27,7 +22,7 @@ public class FibCalcComputeEngineTest {
 
         InputPayloadImpl inputPayload2;
         try {
-            inputPayload2 = new InputPayloadImpl(TestHelpers.getProperInputPayload());
+            inputPayload2 = new InputPayloadImpl(TestHelpers.getProperInputConfig("{'CalcFibNumbersUpTo': [1, 10, 25]}"));
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -45,5 +40,15 @@ public class FibCalcComputeEngineTest {
         assert fibCalcCE.getInputPayload().getOutputType().equals("json");
         // test outputSource
         assert fibCalcCE.getInputPayload().getOutputSource().equals("output.json");
+
+        fibCalcCE.run(); // not starting in a thread so it should be synchronous
+        assert fibCalcCE.getStatus() == ComputeJobStatus.COMPLETED;
+        List<List<Integer>> fibCalcResults = fibCalcCE.getOutputPayload().getFibCalcResults();
+        assert fibCalcResults.size() == 3;
+        assert fibCalcResults.get(0).size() == 1;
+        assert fibCalcResults.get(1).size() == 10;
+        assert fibCalcResults.get(2).size() == 25;
+
+        assert fibCalcResults.get(2).get(24) == fibCalcCE.calculateNthFibonacci(25); // 25th fibonacci number
     }
 }

@@ -1,6 +1,5 @@
 package org.fibsters;
 
-import com.sun.net.httpserver.HttpExchange;
 import org.fibsters.interfaces.CoordinatorComputeEngine;
 import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.InputPayload;
@@ -8,8 +7,6 @@ import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Queue;
 
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
@@ -48,7 +45,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     }
 
     @Override
-    public ArrayList<ComputeJob> createComputeJobsFromInputPayload(InputPayload inputPayload) {
+    public ComputeJob createComputeJobFromInputPayload(InputPayload inputPayload) {
         return null;
     }
 
@@ -56,5 +53,15 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     @Override
     public void processCompletedJob(ComputeJob job) {
 
+    }
+
+    @Override
+    public void queueJob(ComputeJob job) {
+
+    }
+
+    @Override
+    public ComputeJobStatus getJobStatus(ComputeJob job) {
+        return null;
     }
 }

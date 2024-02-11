@@ -3,6 +3,8 @@ package org.fibsters;
 import org.fibsters.interfaces.InputPayload;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class InputPayloadImpl implements InputPayload {
     String uniqueID;
     String inputType;
@@ -13,7 +15,7 @@ public class InputPayloadImpl implements InputPayload {
 
     /**
      * Constructor for InputPayloadImpl
-     * @param inputPayload
+     * @param inputConfig
      * @throws Exception
      */
     /*
@@ -26,15 +28,15 @@ public class InputPayloadImpl implements InputPayload {
         "outputSource": "output.json"
     }
      */
-    public InputPayloadImpl(JSONObject inputPayload) throws Exception {
+    public InputPayloadImpl(JSONObject inputConfig) throws Exception {
         try { // Attempts to convert the JSON object to a valid input payload
-            this.uniqueID = inputPayload.getString("uniqueID");
-            this.inputType = inputPayload.getString("inputType");
-            this.delimiter = inputPayload.getString("delimiter");
-            this.outputType = inputPayload.getString("outputType");
-            this.outputSource = inputPayload.getString("outputSource");
-            if(this.inputType == "json") {
-                String payloadDataString = inputPayload.getString("payloadData");
+            this.uniqueID = inputConfig.getString("uniqueID");
+            this.inputType = inputConfig.getString("inputType");
+            this.delimiter = inputConfig.getString("delimiter");
+            this.outputType = inputConfig.getString("outputType");
+            this.outputSource = inputConfig.getString("outputSource");
+            if (Objects.equals(this.inputType, "json")) {
+                String payloadDataString = inputConfig.getString("payloadData");
                 this.payloadData = new JSONObject(payloadDataString);
             }
         } catch (Exception e) {
@@ -80,7 +82,7 @@ public class InputPayloadImpl implements InputPayload {
 
     @Override
     public String getOutputSource() {
-        return null;
+        return this.outputSource;
     }
 
     @Override

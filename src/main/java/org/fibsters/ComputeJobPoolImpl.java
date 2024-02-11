@@ -49,7 +49,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     // process jobs one at a time in queue, using all available threads per job
     private void processJob(ComputeJob job) {
         int numThreads = getMaxNumThreads();
-        int threadGroupSize = job.getTotalSize() / numThreads;
+        int threadGroupSize = job.getTotalSize() / numThreads; // 90 fib numbers / 4 threads = 22.5
         for (int i = numThreads; i >= 0; i--) {
             int start = i * threadGroupSize;
             int end = (i + 1) * threadGroupSize;

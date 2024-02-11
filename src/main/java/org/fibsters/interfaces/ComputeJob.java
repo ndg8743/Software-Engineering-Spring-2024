@@ -4,6 +4,7 @@ import org.fibsters.ComputeJobStatus;
 
 public interface ComputeJob extends Runnable {
     void setInputPayload(InputPayload inputPayload);
+    OutputPayload getOutputPayload();
 
     ComputeJobStatus getStatus();
 

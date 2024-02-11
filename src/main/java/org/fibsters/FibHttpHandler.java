@@ -53,6 +53,8 @@ public class FibHttpHandler implements HttpHandler {
         System.out.println(inputString);
 
         Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
+        // TODO: handle the result
+
         if (result.isSuccess()) {
             String response = result.toJSON().toString();
             sendResponse(t, response);
