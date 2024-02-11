@@ -2,18 +2,18 @@ import org.json.JSONObject;
 
 public class TestHelpers {
 
-    public static String getProperInputConfigString(String CustomPayloadData) {
-        JSONObject ProperInputPayloadJSON = getProperInputConfig(CustomPayloadData);
-        return ProperInputPayloadJSON.toString();
+    public static String getProperInputConfigString(String customPayloadData) {
+        JSONObject properInputPayloadJSON = getProperInputConfig(customPayloadData);
+        return properInputPayloadJSON.toString();
     }
-    public static JSONObject getProperInputConfig(String CustomPayloadData) {
-        JSONObject ProperInputPayloadJSON = new JSONObject();
-        ProperInputPayloadJSON.put("uniqueID", "1234");
-        ProperInputPayloadJSON.put("inputType", "json");
-        ProperInputPayloadJSON.put("payloadData", CustomPayloadData != null ? CustomPayloadData : "{'CalcFibNumbersUpTo': [6, 7, 8]}");
-        ProperInputPayloadJSON.put("delimiter", "");
-        ProperInputPayloadJSON.put("outputType", "json");
-        ProperInputPayloadJSON.put("outputSource", "output.json");
-        return ProperInputPayloadJSON;
+    public static JSONObject getProperInputConfig(String customPayloadData) {
+        JSONObject properInputPayloadJSON = new JSONObject();
+        properInputPayloadJSON.put("uniqueID", "1234");
+        properInputPayloadJSON.put("inputType", "json");
+        properInputPayloadJSON.put("payloadData", customPayloadData != null ? customPayloadData : "{'CalcFibNumbersUpTo': [6, 7, 8]}");
+        properInputPayloadJSON.put("delimiter", "");
+        properInputPayloadJSON.put("outputType", "json");
+        properInputPayloadJSON.put("outputSource", "output.json");
+        return properInputPayloadJSON;
     }
 }

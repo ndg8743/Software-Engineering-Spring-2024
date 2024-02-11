@@ -32,8 +32,8 @@ public class CoordinatorComputeEngineTest {
         Instant startTime = Instant.now();
         Duration timeout = Duration.ofSeconds(5);
 
-        while(computeAPI.getJobStatus(job) != ComputeJobStatus.COMPLETED){
-            if(Duration.between(startTime, Instant.now()).compareTo(timeout) > 0){
+        while (computeAPI.getJobStatus(job) != ComputeJobStatus.COMPLETED) {
+            if (Duration.between(startTime, Instant.now()).compareTo(timeout) > 0) {
                 assert false; // timeout
                 break;
             }

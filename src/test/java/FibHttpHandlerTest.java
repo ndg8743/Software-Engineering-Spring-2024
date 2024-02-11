@@ -1,6 +1,9 @@
-import org.fibsters.*;
+
 
 import com.sun.net.httpserver.HttpExchange;
+import org.fibsters.CoordinatorComputeEngineImpl;
+import org.fibsters.DataStorageImpl;
+import org.fibsters.FibHttpHandler;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -9,17 +12,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+
 
 // Mockito Smoke Tests
 public class FibHttpHandlerTest {
     @Test
     public void testFibHttpHandler() throws IOException {
         /* ---- Test improper inputPayload Format ---- */
-        JSONObject ImproperInputPayloadJSON = new JSONObject();
-        ImproperInputPayloadJSON.put("input", "test");
+        JSONObject improperInputPayloadJSON = new JSONObject();
+        improperInputPayloadJSON.put("input", "test");
 
-        String inputString = ImproperInputPayloadJSON.toString();
+        String inputString = improperInputPayloadJSON.toString();
         ByteArrayOutputStream responseStreamo =
                 setupHttpHandlerMockito(
                         Mockito.mock(HttpExchange.class),
@@ -46,9 +50,9 @@ public class FibHttpHandlerTest {
         assert responseJSON.getBoolean("success") == false;
 
         /* ---- Test proper inputPayload Format ---- */
-        JSONObject ProperInputPayloadJSON = TestHelpers.getProperInputConfig(null);
+        JSONObject properInputPayloadJSON = TestHelpers.getProperInputConfig(null);
 
-        inputString = ProperInputPayloadJSON.toString();
+        inputString = properInputPayloadJSON.toString();
         responseStreamo =
                 setupHttpHandlerMockito(
                         Mockito.mock(HttpExchange.class),
@@ -91,10 +95,9 @@ public class FibHttpHandlerTest {
         assert responseJSON.has("errorMessage");
         // I could simplify these to not have == true but it helps increase readability.
         assert responseJSON.getBoolean("success") == true || responseJSON.getBoolean("success") == false;
-        if(responseJSON.getBoolean("success") == true) {
+        if (responseJSON.getBoolean("success") == true) {
             assert responseJSON.getString("errorMessage").length() == 0;
-        }
-        else {
+        } else {
             assert responseJSON.getString("errorMessage").length() > 0;
         }
         return responseJSON;
