@@ -1,11 +1,13 @@
 package org.fibsters.interfaces;
 
+import org.json.JSONObject;
+
 public interface InputPayload extends Payload {
     public String getUniqueID();
     public String getInputType();
-    String inputType = "defaultInputType";
-    char delimiter = ',';
-    String payloadData = "defaultPayloadData";
-    String outputType = "defaultOutputType";
-    String outputData = "defaultOutputData";
+    JSONObject getPayloadData();
+    String getOutputType();
+    String getOutputData();
+    String getDelimiter();
+    public Integer getTotalSize();
 }

@@ -14,7 +14,57 @@ import static org.mockito.Mockito.*;
 
 // Mockito Smoke Tests
 public class SmokeTests {
+    @Test
+    public void testFibHttpHandler() throws IOException {
+        /* ---- Test improper inputPayload Format ---- */
+        JSONObject ImproperInputPayloadJSON = new JSONObject();
+        ImproperInputPayloadJSON.put("input", "test");
 
+        String inputString = ImproperInputPayloadJSON.toString();
+        ByteArrayOutputStream responseStreamo =
+                setupHttpHandlerMockito(
+                        Mockito.mock(HttpExchange.class),
+                        "POST",
+                        inputString);
+        String response = responseStreamo.toString();
+        System.out.println(response);
+        // verify response is a JSON object
+        JSONObject responseJSON = verifyProperInputPayloadFormat(response);
+
+        assert responseJSON.getBoolean("success") == false;
+
+        /* ---- Test sending garbage string ---- */
+        inputString = "test with invalid json";
+        responseStreamo =
+                setupHttpHandlerMockito(
+                        Mockito.mock(HttpExchange.class),
+                        "POST",
+                        inputString);
+        response = responseStreamo.toString();
+        System.out.println(response);
+        responseJSON = verifyProperInputPayloadFormat(response);
+
+        assert responseJSON.getBoolean("success") == false;
+
+        /* ---- Test proper inputPayload Format ---- */
+        JSONObject ProperInputPayloadJSON = TestHelpers.getProperInputPayload();
+
+        inputString = ProperInputPayloadJSON.toString();
+        responseStreamo =
+                setupHttpHandlerMockito(
+                        Mockito.mock(HttpExchange.class),
+                        "POST",
+                        inputString);
+        response = responseStreamo.toString();
+        System.out.println(response);
+
+        responseJSON = verifyProperInputPayloadFormat(response);
+
+        assert responseJSON.getBoolean("success") == true;
+
+    }
+
+    // ---- Helper Functions ----
     private ByteArrayOutputStream setupHttpHandlerMockito(HttpExchange t, String requestMethod, String inputString) throws IOException {
         CoordinatorComputeEngineImpl api = new CoordinatorComputeEngineImpl(new DataStorageImpl());
         FibHttpHandler fibHttpHandler = new FibHttpHandler(api);
@@ -49,59 +99,5 @@ public class SmokeTests {
             assert responseJSON.getString("errorMessage").length() > 0;
         }
         return responseJSON;
-    }
-    @Test
-    public void testFibHttpHandler() throws IOException {
-        /* ---- Test improper inputPayload Format ---- */
-        JSONObject ImproperInputPayloadJSON = new JSONObject();
-        ImproperInputPayloadJSON.put("input", "test");
-
-        String inputString = ImproperInputPayloadJSON.toString();
-        ByteArrayOutputStream responseStreamo =
-                setupHttpHandlerMockito(
-                        Mockito.mock(HttpExchange.class),
-                        "POST",
-                        inputString);
-        String response = responseStreamo.toString();
-        System.out.println(response);
-        // verify response is a JSON object
-        JSONObject responseJSON = verifyProperInputPayloadFormat(response);
-
-        assert responseJSON.getBoolean("success") == false;
-
-        /* ---- Test sending garbage string ---- */
-        inputString = "test with invalid json";
-        responseStreamo =
-                setupHttpHandlerMockito(
-                        Mockito.mock(HttpExchange.class),
-                        "POST",
-                        inputString);
-        response = responseStreamo.toString();
-        System.out.println(response);
-        responseJSON = verifyProperInputPayloadFormat(response);
-
-        assert responseJSON.getBoolean("success") == false;
-
-        /* ---- Test proper inputPayload Format ---- */
-        JSONObject ProperInputPayloadJSON = new JSONObject();
-        ProperInputPayloadJSON.put("uniqueID", "1234");
-        ProperInputPayloadJSON.put("inputType", "csv");
-        ProperInputPayloadJSON.put("delimiter", ";");
-        ProperInputPayloadJSON.put("outputType", "json");
-        ProperInputPayloadJSON.put("outputSource", "output.json");
-
-        inputString = ProperInputPayloadJSON.toString();
-        responseStreamo =
-                setupHttpHandlerMockito(
-                        Mockito.mock(HttpExchange.class),
-                        "POST",
-                        inputString);
-        response = responseStreamo.toString();
-        System.out.println(response);
-
-        responseJSON = verifyProperInputPayloadFormat(response);
-
-        assert responseJSON.getBoolean("success") == true;
-
     }
 }

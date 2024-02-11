@@ -20,7 +20,7 @@ public class InputPayloadImpl implements InputPayload {
     Example correct JSON input:
     {
         "uniqueID": "1234",
-        "inputType": "ccsv",
+        "inputType": "json",
         "delimiter": ",",
         "outputType": "json",
         "outputSource": "output.json"
@@ -33,33 +33,48 @@ public class InputPayloadImpl implements InputPayload {
             this.delimiter = inputPayload.getString("delimiter");
             this.outputType = inputPayload.getString("outputType");
             this.outputSource = inputPayload.getString("outputSource");
+            if(this.inputType == "json") {
+                String payloadDataString = inputPayload.getString("payloadData");
+                this.payloadData = new JSONObject(payloadDataString);
+            }
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
-        this.payloadData = inputPayload;
     }
     @Override
     public String getUniqueID() {
-        return null;
+        return this.uniqueID;
     }
 
     @Override
     public String getInputType() {
-        return null;
+        return this.inputType;
+    }
+
+    // parse data to get total size.
+    // used to split up the work for the compute engines
+    @Override
+    public Integer getTotalSize() {
+        return null; // Have to calcuate based on if it's csv or json, what fields ect
     }
 
     @Override
     public String getDelimiter() {
-        return null;
+        return this.delimiter;
     }
 
     @Override
     public JSONObject getPayloadData() {
-        return null;
+        return this.payloadData;
     }
 
     @Override
     public String getOutputType() {
+        return this.outputType;
+    }
+
+    @Override
+    public String getOutputData() {
         return null;
     }
 
