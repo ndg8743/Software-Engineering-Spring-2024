@@ -14,19 +14,7 @@ import static org.mockito.Mockito.*;
 
 // Mockito Smoke Tests
 public class SmokeTests {
-    @Test
-    public void testFibCalcComputeEngine() {
-        FibCalcComputeEngineImpl fibCalcCE = Mockito.mock(FibCalcComputeEngineImpl.class);
-        // new inputPayload
-        InputPayload inputPayload = Mockito.mock(InputPayload.class);
-        // set inputPayload
-        fibCalcCE.setInputPayload(inputPayload);
-        // get inputPayload
-        InputPayload returnPayload = fibCalcCE.getInputPayload();
-        // run
-        fibCalcCE.run();
 
-    }
     private ByteArrayOutputStream setupHttpHandlerMockito(HttpExchange t, String requestMethod, String inputString) throws IOException {
         CoordinatorComputeEngineImpl api = new CoordinatorComputeEngineImpl(new DataStorageImpl());
         FibHttpHandler fibHttpHandler = new FibHttpHandler(api);

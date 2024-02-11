@@ -1,5 +1,5 @@
 package org.fibsters;
-import org.fibsters.interfaces.ComputeJobStatus;
+import org.fibsters.ComputeJobStatus;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.json.JSONObject;
