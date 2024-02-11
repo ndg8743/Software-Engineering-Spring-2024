@@ -44,7 +44,7 @@ public class FibHttpHandler implements HttpHandler {
     example invalid input:
     curl.exe -X POST http://127.0.0.1:8080/fib -d '{\"input\": \"hello\"}'
     example valid input:
-    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"UUID\": \"1234\", \"inputType\": \"csv\", \"delimiter\": \";\", \"outputType\": \"json\", \"outputSource\": \"output.json\" }' http://localhost:8080/fib
+    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"csv\", \"delimiter\": \";\", \"outputType\": \"json\", \"outputSource\": \"output.json\" }' http://localhost:8080/fib
      */
 
     private void handlePost(HttpExchange t) throws IOException {

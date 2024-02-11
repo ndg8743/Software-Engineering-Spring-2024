@@ -1,7 +1,7 @@
 package org.fibsters.interfaces;
 
 public interface InputPayload extends Payload {
-    public String getUUID();
+    public String getUniqueID();
     public String getInputType();
     String inputType = "defaultInputType";
     char delimiter = ',';

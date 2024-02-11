@@ -1,7 +1,12 @@
 package org.fibsters;
 
 import com.sun.net.httpserver.HttpExchange;
-import org.fibsters.interfaces.*;
+import org.fibsters.interfaces.CoordinatorComputeEngine;
+import org.fibsters.interfaces.ComputeJob;
+import org.fibsters.interfaces.InputPayload;
+import org.fibsters.interfaces.OutputPayload;
+import org.fibsters.interfaces.Result;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +19,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     private ComputeJobPoolImpl jobPool;
     private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
 
-    public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage){
+    public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage) {
         this.dataStorage = dataStorage;
         // The rest is very tightly coupled to the implementation of the compute engines.
         // Not sure if this is the best way to do this.

@@ -4,7 +4,7 @@ import org.fibsters.interfaces.InputPayload;
 import org.json.JSONObject;
 
 public class InputPayloadImpl implements InputPayload {
-    String UUID;
+    String uniqueID;
     String inputType;
     String delimiter;
     JSONObject payloadData;
@@ -19,7 +19,7 @@ public class InputPayloadImpl implements InputPayload {
     /*
     Example correct JSON input:
     {
-        "UUID": "1234",
+        "uniqueID": "1234",
         "inputType": "ccsv",
         "delimiter": ",",
         "outputType": "json",
@@ -27,8 +27,8 @@ public class InputPayloadImpl implements InputPayload {
     }
      */
     public InputPayloadImpl(JSONObject inputPayload) throws Exception {
-        try{ // Attempts to convert the JSON object to a valid input payload
-            this.UUID = inputPayload.getString("UUID");
+        try { // Attempts to convert the JSON object to a valid input payload
+            this.uniqueID = inputPayload.getString("uniqueID");
             this.inputType = inputPayload.getString("inputType");
             this.delimiter = inputPayload.getString("delimiter");
             this.outputType = inputPayload.getString("outputType");
@@ -39,7 +39,7 @@ public class InputPayloadImpl implements InputPayload {
         this.payloadData = inputPayload;
     }
     @Override
-    public String getUUID() {
+    public String getUniqueID() {
         return null;
     }
 

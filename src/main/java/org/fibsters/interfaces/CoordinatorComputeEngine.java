@@ -37,7 +37,8 @@ import java.util.ArrayList;
      * Removes the job from the jobPool.
      * Sends back OutputPayload to the client ( with whatever status it has ).
      */
-    void processCompletedJob(ComputeJob job);}
+    void processCompletedJob(ComputeJob job);
+ }
 
 
 

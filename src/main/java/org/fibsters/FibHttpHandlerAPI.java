@@ -18,21 +18,13 @@ public class FibHttpHandlerAPI {
         port = givenPort;
     }
 
-    /**
-     * For testing purposes only.
-     * @param fibHttpHandler
-     */
-    public void _setFibHttpHandler(FibHttpHandler fibHttpHandler) {
-        this.fibHttpHandler = fibHttpHandler;
-    }
-
     // start
     public void start() throws IOException {
         this.api = new CoordinatorComputeEngineImpl(new DataStorageImpl());
 
         server = HttpServer.create();
         server.bind(new InetSocketAddress(port), 0);
-        if(fibHttpHandler == null) {
+        if (fibHttpHandler == null) {
             fibHttpHandler = new FibHttpHandler(api);
         }
         server.createContext("/fib", (HttpHandler) fibHttpHandler);

@@ -1,6 +1,12 @@
 package org.fibsters;
 
-import org.fibsters.interfaces.*;
+import org.fibsters.interfaces.DataStorage;
+import org.fibsters.interfaces.InputPayload;
+import org.fibsters.interfaces.Result;
+import org.fibsters.interfaces.OutputPayload;
+import org.fibsters.interfaces.ComputeJob;
+import org.fibsters.FailureResult;
+import org.fibsters.SuccessResult;
 import org.json.JSONObject;
 
 import org.json.JSONException;
@@ -18,7 +24,7 @@ public class DataStorageImpl implements DataStorage {
             return result;
         }
         // Attempt to create an InputPayload object from the JSON object(keys need to match up/data types need to match up)
-        try{
+        try {
             InputPayload inputPayload = new InputPayloadImpl(inputPayloadJson);
             SuccessResult result = new SuccessResult<>(inputPayload);
             return result;

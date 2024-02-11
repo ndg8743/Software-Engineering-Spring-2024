@@ -96,7 +96,7 @@ public class SmokeTests {
 
         /* ---- Test proper inputPayload Format ---- */
         JSONObject ProperInputPayloadJSON = new JSONObject();
-        ProperInputPayloadJSON.put("UUID", "1234");
+        ProperInputPayloadJSON.put("uniqueID", "1234");
         ProperInputPayloadJSON.put("inputType", "csv");
         ProperInputPayloadJSON.put("delimiter", ";");
         ProperInputPayloadJSON.put("outputType", "json");
