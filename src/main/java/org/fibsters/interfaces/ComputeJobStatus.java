@@ -1,6 +1,6 @@
 package org.fibsters.interfaces;
 
-interface ComputeJobStatus {
+public interface ComputeJobStatus {
     public String getStatus();
 
     public String getErrorMessage();
