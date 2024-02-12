@@ -11,6 +11,9 @@ import org.mockito.Mockito;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -49,8 +52,12 @@ public class FibHttpHandlerTest {
 
         assert responseJSON.getBoolean("success") == false;
 
+        List<Integer> list = new ArrayList<>();
+
+        Collections.addAll(list, 1, 10, 25);
+
         /* ---- Test proper inputPayload Format ---- */
-        JSONObject properInputPayloadJSON = TestHelpers.getProperInputConfig(null);
+        JSONObject properInputPayloadJSON = InMemoryDatastore.getProperInputConfig(list);
 
         inputString = properInputPayloadJSON.toString();
         responseStreamo =

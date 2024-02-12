@@ -4,6 +4,7 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
@@ -11,6 +12,7 @@ public class OutputPayloadImpl implements OutputPayload {
     InputPayload inputPayload;
     ComputeJobStatus status;
     List<List<Integer>> fibCalcResults;
+    List<List<String>> fibCalcStrings;
 
 
 
@@ -40,13 +42,25 @@ public class OutputPayloadImpl implements OutputPayload {
     }
 
     @Override
-    public List<List<Integer>> getFibCalcResults() {
-        return null;
+    public List<List<Integer>> getFibCalcResultsInteger2dList() {
+        return this.fibCalcResults;
     }
 
     @Override
     public void setFibCalcResults(List<List<Integer>> fibCalcResults) {
+        this.fibCalcResults = fibCalcResults;
+    }
 
+    public List<String> toStringList() {
+        ArrayList<String> jsonStringList = new ArrayList<>();
+
+        for (List<Integer> secondList : this.fibCalcResults) {
+            for (Integer integer : secondList) {
+                jsonStringList.add(Integer.toString(integer));
+            }
+        }
+
+        return jsonStringList;
     }
 
 }
