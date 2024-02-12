@@ -1,7 +1,10 @@
+import org.fibsters.OutputPayloadImpl;
 import org.json.JSONObject;
 
-public class TestHelpers {
+import java.util.Arrays;
+import java.util.List;
 
+public class InMemoryDatastore {
     public static String getProperInputConfigString(String customPayloadData) {
         JSONObject properInputPayloadJSON = getProperInputConfig(customPayloadData);
         return properInputPayloadJSON.toString();

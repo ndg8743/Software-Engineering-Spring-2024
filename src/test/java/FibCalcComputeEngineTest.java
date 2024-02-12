@@ -23,8 +23,13 @@ public class FibCalcComputeEngineTest {
         assert status == ComputeJobStatus.PENDING;
 
         InputPayloadImpl inputPayload2;
+
+        List<Integer> list = new ArrayList<>();
+
+        Collections.addAll(list, 1, 10, 25);
+
         try {
-            inputPayload2 = new InputPayloadImpl(TestHelpers.getProperInputConfig("{'CalcFibNumbersUpTo': [1, 10, 25]}"));
+            inputPayload2 = new InputPayloadImpl(InMemoryDatastore.getProperInputConfig(list)); // "{'CalcFibNumbersUpTo': [1, 10, 25]}"
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -45,7 +50,7 @@ public class FibCalcComputeEngineTest {
 
         fibCalcCE.run(); // not starting in a thread so it should be synchronous
         assert fibCalcCE.getStatus() == ComputeJobStatus.COMPLETED;
-        List<List<Integer>> fibCalcResults = fibCalcCE.getOutputPayload().getFibCalcResults();
+        List<List<Integer>> fibCalcResults = fibCalcCE.getOutputPayload().getFibCalcResultsInteger2dList();
         assert fibCalcResults.size() == 3;
         assert fibCalcResults.get(0).size() == 1;
         assert fibCalcResults.get(1).size() == 10;

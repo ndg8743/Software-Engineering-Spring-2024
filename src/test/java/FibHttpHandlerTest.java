@@ -57,7 +57,7 @@ public class FibHttpHandlerTest {
         Collections.addAll(list, 1, 10, 25);
 
         /* ---- Test proper inputPayload Format ---- */
-        JSONObject properInputPayloadJSON = TestHelpers.getProperInputConfig(null);
+        JSONObject properInputPayloadJSON = InMemoryDatastore.getProperInputConfig(list);
 
         inputString = properInputPayloadJSON.toString();
         responseStreamo =

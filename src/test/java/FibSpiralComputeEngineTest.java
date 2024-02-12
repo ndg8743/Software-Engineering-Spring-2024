@@ -27,6 +27,6 @@ public class FibSpiralComputeEngineTest {
         fibSpiralCE.run(); // not starting in a thread so it should be synchronous
         assert fibSpiralCE.getStatus() == ComputeJobStatus.COMPLETED;
 
-        assert fibSpiralCE.getOutputPayload().getFibCalcResults().size() == 3;
+        assert fibSpiralCE.getOutputPayload().getFibCalcResultsInteger2dList().size() == 3;
     }
 }
