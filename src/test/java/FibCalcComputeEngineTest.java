@@ -4,6 +4,8 @@ import org.fibsters.InputPayloadImpl;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FibCalcComputeEngineTest {
@@ -49,6 +51,6 @@ public class FibCalcComputeEngineTest {
         assert fibCalcResults.get(1).size() == 10;
         assert fibCalcResults.get(2).size() == 25;
 
-        assert fibCalcResults.get(2).get(24) == fibCalcCE.calculateNthFibonacci(25); // 25th fibonacci number
+        assert fibCalcResults.get(2).get(24) == FibCalcComputeEngineImpl.calculateNthFibonacci(25); // 25th fibonacci number
     }
 }
