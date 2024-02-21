@@ -27,9 +27,46 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         executor = Executors.newFixedThreadPool(maxNumThreads);
         jobs = new ConcurrentLinkedQueue<ComputeJob>();
         futureFibTasks = new Future[maxNumThreads];
+        // initialize the futureFibTasks array
+        initializeFutureFibTasks();
+
     }
+
+    private void initializeFutureFibTasks() {
+        for (int i = 0; i < futureFibTasks.length; i++) {
+            futureFibTasks[i] = new Future<Object>() {
+                @Override
+                public boolean cancel(boolean mayInterruptIfRunning) {
+                    return false;
+                }
+
+                @Override
+                public boolean isCancelled() {
+                    return false;
+                }
+
+                @Override
+                public boolean isDone() {
+                    return false;
+                }
+
+                @Override
+                public Object get() {
+                    return null;
+                }
+
+                @Override
+                public Object get(long timeout, TimeUnit unit) {
+                    return null;
+                }
+            };
+        }
+    }
+
+
     @Override
     public void addJob(ComputeJob job) {
+        job.setStatus(ComputeJobStatus.PENDING);
         jobs.add(job);
     }
 
@@ -43,13 +80,63 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     }
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::processAllJobs, 0, 5, TimeUnit.SECONDS);
+        // TODO: make sure this starts only once. possible use the factory pattern
+        scheduler.scheduleAtFixedRate(this::processAllJobs, 0, 1, TimeUnit.SECONDS);
     }
 
     // process jobs one at a time in queue, using all available threads per job
     private void processJob(ComputeJob job) {
+        job.setStatus(ComputeJobStatus.RUNNING);
         int numThreads = getMaxNumThreads();
-        int threadGroupSize = job.getTotalSize() / numThreads; // 90 fib numbers / 4 threads = 22.5
+
+        //int threadGroupSize = Math.round(job.getTotalSize() / numThreads);
+        int totalJobSize = job.getTotalSize(); // if [1, 10, 25] then 36
+        int[] subJobs = job.getInputPayload().getPayloadDataParsed(); // ex [1, 10, 25]
+
+        int[] threadsPerSubjob = new int[subJobs.length];
+
+        int biggestSubJob = 0;
+        int biggestSubJobIndex = 0;
+        int sanityCheckCount = 0;
+        for (int i = 0; i < subJobs.length; i++) {
+            int threadNum = Math.max(1, Math.round(((float) subJobs[i] / totalJobSize) * numThreads));
+            if (threadNum > biggestSubJob) {
+                biggestSubJob = threadNum;
+                biggestSubJobIndex = i;
+            }
+            sanityCheckCount += threadNum;
+            threadsPerSubjob[i] = threadNum;
+        }
+        if (sanityCheckCount < numThreads) {
+            int diff = Math.abs(numThreads - sanityCheckCount);
+            threadsPerSubjob[0] += diff; // add the difference to the first subjob
+        } else if (sanityCheckCount > numThreads) {
+            int diff = Math.abs(numThreads - sanityCheckCount);
+            threadsPerSubjob[biggestSubJobIndex] -= diff; // subtract the difference from the biggest subjob
+        }
+        int threadCount = 0;
+        for (int i = 0; i < threadsPerSubjob.length; i++) {
+            int threadGroupSize = subJobs[i] / threadsPerSubjob[i];
+            for (int j = 0; j < threadsPerSubjob[i]; j++) {
+                //System.out.println("Subjob " + i + " has " + threadsPerSubjob[i] + " threads");
+
+                int start = j * threadGroupSize;
+                int end = (j + 1) * threadGroupSize;
+
+                if (j == threadsPerSubjob[i] - 1) { // threadgroup didnt divide evenly so pick up the remaining elements
+                    end = subJobs[i];
+                }
+
+                ComputeJob jobClone = job.clone();
+                jobClone.setStartIndex(start);
+                jobClone.setEndIndex(end);
+                jobClone.setChunk(i);
+                futureFibTasks[threadCount++] = executor.submit(jobClone);
+            }
+        }
+        System.out.println("Thread count: " + threadCount);
+
+        /*int threadGroupSize = Math.round(job.getTotalSize() / numThreads); // 90 fib numbers / 4 threads = 22.5
         for (int i = numThreads; i >= 0; i--) {
             int start = i * threadGroupSize;
             int end = (i + 1) * threadGroupSize;
@@ -61,22 +148,19 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             job.setStartIndex(start);
             job.setEndIndex(end);
             futureFibTasks[i] = executor.submit(job);
-        }
-        executor.execute(job);
+        }*/
+        //executor.execute(job);
     }
 
     private void processAllJobs() {
-        if (jobs.isEmpty()) {
-            return;
-        }
-        if (currentJob == null || currentJob.getStatus() == ComputeJobStatus.COMPLETED) {
-            finishedJobs.add(currentJob);
-            currentJob = jobs.poll();
-            if (currentJob != null) {
-                processJob(currentJob);
+        if (!jobs.isEmpty()) {
+            if (this.currentJob == null) {
+                this.currentJob = jobs.poll();
+                if (currentJob != null) {
+                    processJob(currentJob);
+                }
             }
         }
-        // if the current job is not done, then we need to check if it's done
         // loop over futures
         int count = 0;
         for (int i = 0; i < futureFibTasks.length; i++) {
@@ -85,7 +169,10 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             }
         }
         if (count == futureFibTasks.length) {
+            initializeFutureFibTasks();
             currentJob.setStatus(ComputeJobStatus.COMPLETED);
+            finishedJobs.add(currentJob);
+            currentJob = null;
         }
     }
 

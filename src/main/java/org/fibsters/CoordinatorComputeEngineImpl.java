@@ -16,13 +16,17 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     private ComputeJobPoolImpl jobPool;
     private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
 
+    private Queue<OutputPayload> outputPayloadQueue; // allowing for async output payloads for when jobPool is busy.
+
     public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage) {
         this.dataStorage = dataStorage;
         // The rest is very tightly coupled to the implementation of the compute engines.
         // Not sure if this is the best way to do this.
-        this.fibCalcComputeEngine = new FibCalcComputeEngineImpl();
+
+        //this.fibCalcComputeEngine = new FibCalcComputeEngineImpl(outputPayload);
         this.fibSpiralComputeEngine = new FibSpiralComputeEngineImpl();
         this.jobPool = new ComputeJobPoolImpl();
+        this.jobPool.start();
     }
     @Override // @Override is not strictly needed, but it is good practice to use it
     public Result<InputPayload> parseInputPayload(String inputPayloadString) {
@@ -46,7 +50,10 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     @Override
     public ComputeJob createComputeJobFromInputPayload(InputPayload inputPayload) {
-        return null;
+        OutputPayloadImpl outputPayload = new OutputPayloadImpl(0, inputPayload, ComputeJobStatus.UNSTARTED);
+        FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload);
+        fibCalcCE.setInputPayload(inputPayload);
+        return fibCalcCE;
     }
 
 
@@ -57,11 +64,11 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     @Override
     public void queueJob(ComputeJob job) {
-
+        jobPool.addJob(job);
     }
 
     @Override
     public ComputeJobStatus getJobStatus(ComputeJob job) {
-        return null;
+        return job.getStatus();
     }
 }

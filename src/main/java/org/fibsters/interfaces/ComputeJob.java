@@ -17,4 +17,7 @@ public interface ComputeJob extends Runnable {
 
     InputPayload getInputPayload();
 
+    ComputeJob clone();
+
+    void setChunk(int j);
 }

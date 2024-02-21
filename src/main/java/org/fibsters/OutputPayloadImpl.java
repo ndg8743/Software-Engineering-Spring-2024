@@ -1,17 +1,16 @@
 package org.fibsters;
-import org.fibsters.ComputeJobStatus;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
     int index;
     InputPayload inputPayload;
     ComputeJobStatus status;
-    List<List<Integer>> fibCalcResults;
+    List<int[]> fibCalcResults;
     List<List<String>> fibCalcStrings;
 
 
@@ -20,6 +19,16 @@ public class OutputPayloadImpl implements OutputPayload {
         this.index = index;
         this.inputPayload = inputPayload;
         this.status = status;
+        int totalSize = inputPayload.getTotalSize();
+        int[] payloadDataParsed = inputPayload.getPayloadDataParsed();
+        this.fibCalcResults = new ArrayList<>();
+        for (int i = 0; i < totalSize; i++) {
+            this.fibCalcResults.add(new int[payloadDataParsed[i]]);
+        }
+        this.fibCalcStrings = new ArrayList<>();
+        for (int i = 0; i < totalSize; i++) {
+            this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
+        }
     }
     @Override
     public Integer getIndex() {
@@ -38,23 +47,38 @@ public class OutputPayloadImpl implements OutputPayload {
 
     @Override
     public ComputeJobStatus getStatus() {
-        return null;
+        return this.status;
     }
 
     @Override
-    public List<List<Integer>> getFibCalcResultsInteger2dList() {
+    public Boolean isSuccess() {
+        return this.status.equals(ComputeJobStatus.COMPLETED);
+    }
+
+    @Override
+    public void setStatus(ComputeJobStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public List<int[]> getFibCalcResultsInteger2dList() {
         return this.fibCalcResults;
     }
 
     @Override
-    public void setFibCalcResults(List<List<Integer>> fibCalcResults) {
-        this.fibCalcResults = fibCalcResults;
+    public void setFibCalcResults(int chunk, int[] fibCalcSubResults, int startIndex, int endIndex) {
+        for (int i = startIndex; i < endIndex; i++) {
+            int relativeIndex = i - startIndex;
+            this.fibCalcResults.get(chunk)[i] = fibCalcSubResults[relativeIndex];
+        }
+        //System.out.println(chunk +" fibCalcResults: " + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
+        //System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
     }
 
     public List<String> toStringList() {
         ArrayList<String> jsonStringList = new ArrayList<>();
 
-        for (List<Integer> secondList : this.fibCalcResults) {
+        for (int[] secondList : this.fibCalcResults) {
             for (Integer integer : secondList) {
                 jsonStringList.add(Integer.toString(integer));
             }

@@ -1,10 +1,13 @@
 package org.fibsters;
 
+import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.FibSpiralComputeEngine;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
+    private int chunk;
+
     @Override
     public void setInputPayload(InputPayload inputPayload) {
 
@@ -44,6 +47,16 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     public InputPayload getInputPayload() {
 
         return null;
+    }
+
+    @Override
+    public ComputeJob clone() {
+        return null;
+    }
+
+    @Override
+    public void setChunk(int j) {
+        this.chunk = j;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class InMemoryDatastore {
         JSONObject properInputPayloadJSON = new JSONObject();
         properInputPayloadJSON.put("uniqueID", "1234");
         properInputPayloadJSON.put("inputType", "json");
-        properInputPayloadJSON.put("payloadData", customPayloadData.isEmpty() ? customPayloadData : "{'CalcFibNumbersUpTo': [6, 7, 8]}");
+        properInputPayloadJSON.put("payloadData", !customPayloadData.isEmpty() ? customPayloadData : "{'CalcFibNumbersUpTo': [6, 7, 8]}");
         properInputPayloadJSON.put("delimiter", "");
         properInputPayloadJSON.put("outputType", "json");
         properInputPayloadJSON.put("outputSource", "output.json");
@@ -21,7 +21,7 @@ public class InMemoryDatastore {
     }
 
     public static JSONObject getProperInputConfig(List<Integer> inputs) {
-        String formattedArray = "{'CalcFibNumbersUpTo': " + Arrays.toString(inputs.toArray());
+        String formattedArray = "{'CalcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) + "}";
 
         return getProperInputConfig(formattedArray);
     }
