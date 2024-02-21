@@ -10,7 +10,7 @@ public class FibSpiralComputeEngineTest {
     public void testFibSpiralComputeEngine() {
         // TODO: After FibCalcComputeEngine is more finalized, fix this test
 
-        FibCalcComputeEngineImpl fibSpiralCE = new FibCalcComputeEngineImpl();
+        FibCalcComputeEngineImpl fibSpiralCE = new FibCalcComputeEngineImpl(Mockito.mock(OutputPayloadImpl.class));
         InputPayloadImpl inputPayload = Mockito.mock(InputPayloadImpl.class);
         fibSpiralCE.setInputPayload(inputPayload);
 

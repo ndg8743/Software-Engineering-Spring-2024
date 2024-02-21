@@ -10,7 +10,10 @@ public interface OutputPayload {
     public InputPayload getInputPayload(); // For organization clientside
     public ComputeJobStatus getStatus(); // An in-progress, success, or failure status.
 
-    List<List<Integer>> getFibCalcResultsInteger2dList();
+    Boolean isSuccess();
 
-    public void setFibCalcResults(List<List<Integer>> fibCalcResults);
+    void setStatus(ComputeJobStatus status);
+
+    List<int[]> getFibCalcResultsInteger2dList();
+    void setFibCalcResults(int chunk, int[] fibCalcSubResults, int startIndex, int endIndex);
 }

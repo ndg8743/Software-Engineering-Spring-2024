@@ -9,9 +9,11 @@ public class InputPayloadImpl implements InputPayload {
     String uniqueID;
     String inputType;
     String delimiter;
-    JSONObject payloadData;
+    JSONObject payloadDataJSON;
     String outputType;
     String outputSource;
+
+    int[] payloadDataParsed;
 
     /**
      * Constructor for InputPayloadImpl
@@ -37,7 +39,11 @@ public class InputPayloadImpl implements InputPayload {
             this.outputSource = inputConfig.getString("outputSource");
             if (Objects.equals(this.inputType, "json")) {
                 String payloadDataString = inputConfig.getString("payloadData");
-                this.payloadData = new JSONObject(payloadDataString);
+                this.payloadDataJSON = new JSONObject(payloadDataString);
+                this.payloadDataParsed = new int[this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length()];
+                for (int i = 0; i < this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length(); i++) {
+                    this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").getInt(i);
+                }
             }
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
@@ -57,7 +63,9 @@ public class InputPayloadImpl implements InputPayload {
     // used to split up the work for the compute engines
     @Override
     public Integer getTotalSize() {
-        return null; // Have to calcuate based on if it's csv or json, what fields ect
+        // TODO: Make this consider the input type
+        return this.payloadDataParsed.length;
+        // Have to calcuate based on if it's csv or json, what fields ect
     }
 
     @Override
@@ -67,7 +75,11 @@ public class InputPayloadImpl implements InputPayload {
 
     @Override
     public JSONObject getPayloadData() {
-        return this.payloadData;
+        return this.payloadDataJSON;
+    }
+    @Override
+    public int[] getPayloadDataParsed() {
+        return payloadDataParsed;
     }
 
     @Override

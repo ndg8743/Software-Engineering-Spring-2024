@@ -6,5 +6,10 @@ import org.fibsters.OutputPayloadImpl;
 public interface FibCalcComputeEngine extends ComputeJob {
 
 
+    // set/get chunk
+    Integer getChunk();
+
+    void setChunk(Integer chunk);
+
     void setOutputPayload(OutputPayloadImpl outputPayload);
 }
