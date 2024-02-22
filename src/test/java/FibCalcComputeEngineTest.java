@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FibCalcComputeEngineTest {
+
     @Test
     public void testFibCalcComputeEngine() {
         InputPayloadImpl inputPayload = Mockito.mock(InputPayloadImpl.class);
@@ -18,10 +19,12 @@ public class FibCalcComputeEngineTest {
         fibCalcCEMock.setInputPayload(inputPayload);
 
         ComputeJobStatus status = fibCalcCEMock.getStatus();
+
         assert status == ComputeJobStatus.UNSTARTED;
 
         fibCalcCEMock.setStatus(ComputeJobStatus.PENDING);
         status = fibCalcCEMock.getStatus();
+
         assert status == ComputeJobStatus.PENDING;
 
         InputPayloadImpl inputPayload2;
@@ -37,6 +40,7 @@ public class FibCalcComputeEngineTest {
             assert false;
             return;
         }
+
         OutputPayloadImpl outputPayload2 = new OutputPayloadImpl(0, inputPayload2, ComputeJobStatus.UNSTARTED);
         FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload2);
 
@@ -54,14 +58,18 @@ public class FibCalcComputeEngineTest {
 
         // simulating coordinator
         int[] getPayloadData = fibCalcCE.getInputPayload().getPayloadDataParsed();
+
         for (int i = 0; i < getPayloadData.length; i++) {
             fibCalcCE.setStartIndex(0);
             fibCalcCE.setEndIndex(getPayloadData[i]);
             fibCalcCE.setChunk(i);
             fibCalcCE.run();
+
             assert fibCalcCE.getStatus() == ComputeJobStatus.COMPLETED;
         }
+
         List<int[]> fibCalcResults = fibCalcCE.getOutputPayload().getFibCalcResultsInteger2dList();
+
         assert fibCalcResults.size() == 3;
         assert fibCalcResults.get(0).length == 1;
         assert fibCalcResults.get(1).length == 10;
@@ -71,4 +79,5 @@ public class FibCalcComputeEngineTest {
             assert fibCalcResults.get(2)[i] == FibCalcComputeEngineImpl.calculateNthFibonacci(i);
         }
     }
+
 }

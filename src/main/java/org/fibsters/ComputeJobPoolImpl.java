@@ -4,6 +4,7 @@ import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.ComputeJobPool;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -13,60 +14,60 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ComputeJobPoolImpl implements ComputeJobPool {
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private ExecutorService executor; // 🤘
-    private Queue<ComputeJob> jobs;
+    private final ExecutorService executor; // 🤘
+    private final Queue<ComputeJob> jobs;
 
     private final ArrayList<ComputeJob> finishedJobs = new ArrayList<>();
 
     private ComputeJob currentJob;
-    Future<?>[] futureFibTasks;
+    private final Future<?>[] futureFibTasks;
 
     public ComputeJobPoolImpl() {
         int maxNumThreads = getMaxNumThreads();
-        executor = Executors.newFixedThreadPool(maxNumThreads);
-        jobs = new ConcurrentLinkedQueue<ComputeJob>();
-        futureFibTasks = new Future[maxNumThreads];
+
+        this.executor = Executors.newFixedThreadPool(maxNumThreads);
+        this.jobs = new ConcurrentLinkedQueue<>();
+        this.futureFibTasks = new Future[maxNumThreads];
+
         // initialize the futureFibTasks array
         initializeFutureFibTasks();
-
     }
 
     private void initializeFutureFibTasks() {
-        for (int i = 0; i < futureFibTasks.length; i++) {
-            futureFibTasks[i] = new Future<Object>() {
-                @Override
-                public boolean cancel(boolean mayInterruptIfRunning) {
-                    return false;
-                }
+        Arrays.fill(futureFibTasks, new Future<>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false;
+            }
 
-                @Override
-                public boolean isCancelled() {
-                    return false;
-                }
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
 
-                @Override
-                public boolean isDone() {
-                    return false;
-                }
+            @Override
+            public boolean isDone() {
+                return false;
+            }
 
-                @Override
-                public Object get() {
-                    return null;
-                }
+            @Override
+            public Object get() {
+                return null;
+            }
 
-                @Override
-                public Object get(long timeout, TimeUnit unit) {
-                    return null;
-                }
-            };
-        }
+            @Override
+            public Object get(long timeout, TimeUnit unit) {
+                return null;
+            }
+        });
     }
-
 
     @Override
     public void addJob(ComputeJob job) {
         job.setStatus(ComputeJobStatus.PENDING);
+
         jobs.add(job);
     }
 
@@ -98,15 +99,19 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         int biggestSubJob = 0;
         int biggestSubJobIndex = 0;
         int sanityCheckCount = 0;
+
         for (int i = 0; i < subJobs.length; i++) {
             int threadNum = Math.max(1, Math.round(((float) subJobs[i] / totalJobSize) * numThreads));
+
             if (threadNum > biggestSubJob) {
                 biggestSubJob = threadNum;
                 biggestSubJobIndex = i;
             }
+
             sanityCheckCount += threadNum;
             threadsPerSubjob[i] = threadNum;
         }
+
         if (sanityCheckCount < numThreads) {
             int diff = Math.abs(numThreads - sanityCheckCount);
             threadsPerSubjob[0] += diff; // add the difference to the first subjob
@@ -114,9 +119,12 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             int diff = Math.abs(numThreads - sanityCheckCount);
             threadsPerSubjob[biggestSubJobIndex] -= diff; // subtract the difference from the biggest subjob
         }
+
         int threadCount = 0;
+
         for (int i = 0; i < threadsPerSubjob.length; i++) {
             int threadGroupSize = subJobs[i] / threadsPerSubjob[i];
+
             for (int j = 0; j < threadsPerSubjob[i]; j++) {
                 //System.out.println("Subjob " + i + " has " + threadsPerSubjob[i] + " threads");
 
@@ -128,12 +136,15 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                 }
 
                 ComputeJob jobClone = job.clone();
+
                 jobClone.setStartIndex(start);
                 jobClone.setEndIndex(end);
                 jobClone.setChunk(i);
+
                 futureFibTasks[threadCount++] = executor.submit(jobClone);
             }
         }
+
         System.out.println("Thread count: " + threadCount);
 
         /*int threadGroupSize = Math.round(job.getTotalSize() / numThreads); // 90 fib numbers / 4 threads = 22.5
@@ -156,20 +167,25 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         if (!jobs.isEmpty()) {
             if (this.currentJob == null) {
                 this.currentJob = jobs.poll();
+
                 if (currentJob != null) {
                     processJob(currentJob);
                 }
             }
         }
+
         // loop over futures
         int count = 0;
-        for (int i = 0; i < futureFibTasks.length; i++) {
-            if (futureFibTasks[i].isDone()) {
+
+        for (Future<?> futureFibTask : futureFibTasks) {
+            if (futureFibTask.isDone()) {
                 count++;
             }
         }
+
         if (count == futureFibTasks.length) {
             initializeFutureFibTasks();
+
             currentJob.setStatus(ComputeJobStatus.COMPLETED);
             finishedJobs.add(currentJob);
             currentJob = null;
@@ -182,9 +198,11 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         if (finishedJobs.contains(job)) {
             return ComputeJobStatus.COMPLETED;
         }
+
         if (job == currentJob) {
             return ComputeJobStatus.RUNNING;
         }
+
         return ComputeJobStatus.PENDING; // assume in queue
     }
 
@@ -192,4 +210,5 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     public void getJobResults(ComputeJob job) {
 
     }
+
 }

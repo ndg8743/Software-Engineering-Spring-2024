@@ -4,48 +4,46 @@ import org.fibsters.interfaces.FibCalcComputeEngine;
 import org.fibsters.interfaces.InputPayload;
 
 public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
+
     private static final double GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // Phi
     private int[] fibonacci;
-    ComputeJobStatus status;
-    Integer startIndex;
-    Integer endIndex;
-    InputPayload inputPayload; // used for reference potentially(has uuid)
-    Integer chunk;
-
-    OutputPayloadImpl outputPayload;
+    private ComputeJobStatus status;
+    private int startIndex;
+    private int endIndex;
+    private InputPayload inputPayload; // used for reference potentially(has uuid)
+    private int chunk;
+    private OutputPayloadImpl outputPayload;
 
     public FibCalcComputeEngineImpl(OutputPayloadImpl outputPayload) {
-        status = ComputeJobStatus.UNSTARTED;
-        startIndex = 0;
-        endIndex = 0;
+        this.status = ComputeJobStatus.UNSTARTED;
+        this.startIndex = 0;
+        this.endIndex = 0;
         this.outputPayload = outputPayload;
-    }
-    @Override
-    public FibCalcComputeEngineImpl clone() {
-        FibCalcComputeEngineImpl c = new FibCalcComputeEngineImpl(this.outputPayload);
-        c.setStatus(this.status);
-        c.setStartIndex(this.startIndex);
-        c.setEndIndex(this.endIndex);
-        c.setInputPayload(this.inputPayload);
-        c.setOutputPayload(this.outputPayload);
-        c.setChunk(this.chunk);
-        return c;
     }
 
     @Override
-    public void setChunk(int j) {
-        this.chunk = j;
+    public FibCalcComputeEngineImpl clone() {
+        FibCalcComputeEngineImpl clone = new FibCalcComputeEngineImpl(this.outputPayload);
+
+        clone.setStatus(this.status);
+        clone.setStartIndex(this.startIndex);
+        clone.setEndIndex(this.endIndex);
+        clone.setInputPayload(this.inputPayload);
+        clone.setOutputPayload(this.outputPayload);
+        clone.setChunk(this.chunk);
+
+        return clone;
+    }
+
+    @Override
+    public void setChunk(int chunk) {
+        this.chunk = chunk;
     }
 
     // set/get chunk
     @Override
-    public Integer getChunk() {
+    public int getChunk() {
         return chunk;
-    }
-
-    @Override
-    public void setChunk(Integer chunk) {
-        this.chunk = chunk;
     }
 
     @Override
@@ -70,21 +68,23 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     }
 
     @Override
-    public Integer getTotalSize() {
+    public int getTotalSize() {
         int sum = 0;
+
         for (int num : inputPayload.getPayloadDataParsed()) {
             sum += num;
         }
+
         return sum;
     }
 
     @Override
-    public void setStartIndex(Integer startIndex) {
+    public void setStartIndex(int startIndex) {
         this.startIndex = startIndex;
     }
 
     @Override
-    public void setEndIndex(Integer endIndex) {
+    public void setEndIndex(int endIndex) {
         this.endIndex = endIndex;
     }
 
@@ -101,21 +101,23 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
         status = ComputeJobStatus.PENDING;
         int total = endIndex - startIndex;
         fibonacci = new int[total];
+
         if (total == 1) {
             fibonacci[0] = calculateNthFibonacci(startIndex);
         } else {
             fibonacci[0] = calculateNthFibonacci(startIndex);
             fibonacci[1] = calculateNthFibonacci(startIndex + 1);
+
             for (int i = startIndex + 2; i < endIndex; i++) {
                 fibonacci[i - startIndex] = fibonacci[i - 1 - startIndex] + fibonacci[i - 2 - startIndex];
                 //System.err.println(fibonacci[i-startIndex]);
             }
         }
+
         //outputPayload = new OutputPayloadImpl(startIndex, inputPayload, ComputeJobStatus.COMPLETED);
         outputPayload.setFibCalcResults(this.chunk, fibonacci, startIndex, endIndex);
         //System.out.println(this.chunk + " FibCalcComputeEngineImpl.run() completed " + startIndex + " " + endIndex);
         status = ComputeJobStatus.COMPLETED;
-
     }
 
     public static int calculateNthFibonacci(int n) {
@@ -128,4 +130,5 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     public void setOutputPayload(OutputPayloadImpl outputPayload) {
         this.outputPayload = outputPayload;
     }
+
 }

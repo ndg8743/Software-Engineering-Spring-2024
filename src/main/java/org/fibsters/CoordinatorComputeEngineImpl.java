@@ -6,14 +6,14 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
 
-
 import java.util.Queue;
 
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
+
     private FibCalcComputeEngineImpl fibCalcComputeEngine;
-    private FibSpiralComputeEngineImpl fibSpiralComputeEngine;
-    private DataStorageImpl dataStorage;
-    private ComputeJobPoolImpl jobPool;
+    private final FibSpiralComputeEngineImpl fibSpiralComputeEngine;
+    private final DataStorageImpl dataStorage;
+    private final ComputeJobPoolImpl jobPool;
     private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
 
     private Queue<OutputPayload> outputPayloadQueue; // allowing for async output payloads for when jobPool is busy.
@@ -28,6 +28,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
         this.jobPool = new ComputeJobPoolImpl();
         this.jobPool.start();
     }
+
     @Override // @Override is not strictly needed, but it is good practice to use it
     public Result<InputPayload> parseInputPayload(String inputPayloadString) {
         return dataStorage.parseInputPayload(inputPayloadString);
@@ -52,10 +53,11 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     public ComputeJob createComputeJobFromInputPayload(InputPayload inputPayload) {
         OutputPayloadImpl outputPayload = new OutputPayloadImpl(0, inputPayload, ComputeJobStatus.UNSTARTED);
         FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload);
+
         fibCalcCE.setInputPayload(inputPayload);
+
         return fibCalcCE;
     }
-
 
     @Override
     public void processCompletedJob(ComputeJob job) {
@@ -71,4 +73,5 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     public ComputeJobStatus getJobStatus(ComputeJob job) {
         return job.getStatus();
     }
+
 }

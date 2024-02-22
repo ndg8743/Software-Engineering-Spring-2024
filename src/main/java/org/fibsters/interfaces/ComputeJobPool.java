@@ -3,6 +3,7 @@ package org.fibsters.interfaces;
 import org.fibsters.ComputeJobStatus;
 
 public interface ComputeJobPool {
+
     // i.e. public class MyComputeJobPool implements ComputeJobPool { ... } blah blah
     void addJob(ComputeJob job);
 
@@ -11,4 +12,5 @@ public interface ComputeJobPool {
     ComputeJobStatus getJobStatus(ComputeJob job);
 
     void getJobResults(ComputeJob job);
+
 }
