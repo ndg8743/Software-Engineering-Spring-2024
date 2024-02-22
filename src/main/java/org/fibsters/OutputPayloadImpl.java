@@ -1,19 +1,18 @@
 package org.fibsters;
+
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
-    int index;
-    InputPayload inputPayload;
-    ComputeJobStatus status;
-    List<int[]> fibCalcResults;
-    List<List<String>> fibCalcStrings;
 
-
+    private int index;
+    private InputPayload inputPayload;
+    private ComputeJobStatus status;
+    private List<int[]> fibCalcResults;
+    private List<List<String>> fibCalcStrings;
 
     public OutputPayloadImpl(int index, InputPayload inputPayload, ComputeJobStatus status) {
         this.index = index;
@@ -22,21 +21,25 @@ public class OutputPayloadImpl implements OutputPayload {
         int totalSize = inputPayload.getTotalSize();
         int[] payloadDataParsed = inputPayload.getPayloadDataParsed();
         this.fibCalcResults = new ArrayList<>();
+
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcResults.add(new int[payloadDataParsed[i]]);
         }
+
         this.fibCalcStrings = new ArrayList<>();
+
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
         }
     }
+
     @Override
-    public Integer getIndex() {
-        return null;
+    public int getIndex() {
+        return 0;
     }
 
     @Override
-    public void setIndex(Integer index) {
+    public void setIndex(int index) {
 
     }
 
@@ -71,6 +74,7 @@ public class OutputPayloadImpl implements OutputPayload {
             int relativeIndex = i - startIndex;
             this.fibCalcResults.get(chunk)[i] = fibCalcSubResults[relativeIndex];
         }
+
         //System.out.println(chunk +" fibCalcResults: " + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
         //System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
     }

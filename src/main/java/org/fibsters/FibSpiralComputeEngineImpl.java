@@ -6,6 +6,7 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
+
     private int chunk;
 
     @Override
@@ -29,23 +30,22 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     @Override
-    public Integer getTotalSize() {
-        return null;
+    public int getTotalSize() {
+        return 0;
     }
 
     @Override
-    public void setStartIndex(Integer startIndex) {
+    public void setStartIndex(int startIndex) {
 
     }
 
     @Override
-    public void setEndIndex(Integer endIndex) {
+    public void setEndIndex(int endIndex) {
 
     }
 
     @Override
     public InputPayload getInputPayload() {
-
         return null;
     }
 
@@ -55,12 +55,13 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     @Override
-    public void setChunk(int j) {
-        this.chunk = j;
+    public void setChunk(int chunk) {
+        this.chunk = chunk;
     }
 
     @Override
     public void run() {
 
     }
+
 }

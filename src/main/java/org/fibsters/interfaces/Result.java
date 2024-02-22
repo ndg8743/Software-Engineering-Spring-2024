@@ -7,6 +7,7 @@ import org.json.JSONObject;
 // i.e. public class SuccessResult<T> implements Result<T> { ... }
 // Then in processPayload, we can return a new SuccessResult or FailureResult.
 public interface Result<T> {
+
     boolean isSuccess();
 
     T getData();
@@ -16,4 +17,5 @@ public interface Result<T> {
     String getErrorMessage();
 
     JSONObject toJSON();
+
 }

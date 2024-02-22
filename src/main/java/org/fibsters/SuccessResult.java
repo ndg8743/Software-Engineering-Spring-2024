@@ -3,6 +3,7 @@ import org.fibsters.interfaces.Result;
 import org.json.JSONObject;
 
 public class SuccessResult<T> implements Result {
+
     private T data;
 
     public SuccessResult(T data) {
@@ -31,9 +32,12 @@ public class SuccessResult<T> implements Result {
 
     public JSONObject toJSON() {
         JSONObject result = new JSONObject();
+
         result.put("success", this.isSuccess());
         result.put("data", this.data.toString());
         result.put("errorMessage", "");
+
         return result;
     }
+
 }

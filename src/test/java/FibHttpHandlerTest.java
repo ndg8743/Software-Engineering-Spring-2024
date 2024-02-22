@@ -1,5 +1,3 @@
-
-
 import com.sun.net.httpserver.HttpExchange;
 import org.fibsters.CoordinatorComputeEngineImpl;
 import org.fibsters.DataStorageImpl;
@@ -17,9 +15,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-
 // Mockito Smoke Tests
 public class FibHttpHandlerTest {
+
     @Test
     public void testFibHttpHandler() throws IOException {
         /* ---- Test improper inputPayload Format ---- */
@@ -27,13 +25,16 @@ public class FibHttpHandlerTest {
         improperInputPayloadJSON.put("input", "test");
 
         String inputString = improperInputPayloadJSON.toString();
+
         ByteArrayOutputStream responseStreamo =
                 setupHttpHandlerMockito(
                         Mockito.mock(HttpExchange.class),
                         "POST",
                         inputString);
+
         String response = responseStreamo.toString();
         System.out.println(response);
+
         // verify response is a JSON object
         JSONObject responseJSON = verifyProperInputPayloadFormat(response);
 
@@ -46,7 +47,9 @@ public class FibHttpHandlerTest {
                         Mockito.mock(HttpExchange.class),
                         "POST",
                         inputString);
+
         response = responseStreamo.toString();
+
         System.out.println(response);
         responseJSON = verifyProperInputPayloadFormat(response);
 
@@ -66,30 +69,35 @@ public class FibHttpHandlerTest {
                         "POST",
                         inputString);
         response = responseStreamo.toString();
+
         System.out.println(response);
 
         responseJSON = verifyProperInputPayloadFormat(response);
 
         assert responseJSON.getBoolean("success") == true;
-
     }
 
     // ---- Helper Functions ----
-    private ByteArrayOutputStream setupHttpHandlerMockito(HttpExchange t, String requestMethod, String inputString) throws IOException {
+    private ByteArrayOutputStream setupHttpHandlerMockito(HttpExchange httpExchange, String requestMethod, String inputString) throws IOException {
         CoordinatorComputeEngineImpl api = new CoordinatorComputeEngineImpl(new DataStorageImpl());
         FibHttpHandler fibHttpHandler = new FibHttpHandler(api);
 
-        when(t.getRequestBody()).thenReturn(Mockito.mock(InputStream.class));
-        when(t.getRequestMethod()).thenReturn(requestMethod);
+        when(httpExchange.getRequestBody()).thenReturn(Mockito.mock(InputStream.class));
+        when(httpExchange.getRequestMethod()).thenReturn(requestMethod);
+
         ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
-        when(t.getResponseBody()).thenReturn(responseStream);
-        when(t.getRequestBody().readAllBytes()).thenReturn(inputString.getBytes());
-        fibHttpHandler.handle(t);
+
+        when(httpExchange.getResponseBody()).thenReturn(responseStream);
+        when(httpExchange.getRequestBody().readAllBytes()).thenReturn(inputString.getBytes());
+
+        fibHttpHandler.handle(httpExchange);
+
         return responseStream;
     }
 
     private JSONObject verifyProperInputPayloadFormat(String response) {
         JSONObject responseJSON;
+
         try {
             responseJSON = new JSONObject(response);
         } catch (Exception e) {
@@ -100,13 +108,17 @@ public class FibHttpHandlerTest {
         assert responseJSON.has("success");
         assert responseJSON.has("data");
         assert responseJSON.has("errorMessage");
+
         // I could simplify these to not have == true but it helps increase readability.
         assert responseJSON.getBoolean("success") == true || responseJSON.getBoolean("success") == false;
+
         if (responseJSON.getBoolean("success") == true) {
             assert responseJSON.getString("errorMessage").length() == 0;
         } else {
             assert responseJSON.getString("errorMessage").length() > 0;
         }
+
         return responseJSON;
     }
+
 }

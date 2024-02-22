@@ -6,17 +6,18 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class InputPayloadImpl implements InputPayload {
-    String uniqueID;
-    String inputType;
-    String delimiter;
-    JSONObject payloadDataJSON;
-    String outputType;
-    String outputSource;
 
-    int[] payloadDataParsed;
+    private String uniqueID;
+    private String inputType;
+    private String delimiter;
+    private JSONObject payloadDataJSON;
+    private String outputType;
+    private String outputSource;
+    private int[] payloadDataParsed;
 
     /**
      * Constructor for InputPayloadImpl
+     *
      * @param inputConfig
      * @throws Exception
      */
@@ -37,10 +38,12 @@ public class InputPayloadImpl implements InputPayload {
             this.delimiter = inputConfig.getString("delimiter");
             this.outputType = inputConfig.getString("outputType");
             this.outputSource = inputConfig.getString("outputSource");
+
             if (Objects.equals(this.inputType, "json")) {
                 String payloadDataString = inputConfig.getString("payloadData");
                 this.payloadDataJSON = new JSONObject(payloadDataString);
                 this.payloadDataParsed = new int[this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length()];
+
                 for (int i = 0; i < this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length(); i++) {
                     this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").getInt(i);
                 }
@@ -49,6 +52,7 @@ public class InputPayloadImpl implements InputPayload {
             throw new Exception("Error: " + e.getMessage());
         }
     }
+
     @Override
     public String getUniqueID() {
         return this.uniqueID;
@@ -62,7 +66,7 @@ public class InputPayloadImpl implements InputPayload {
     // parse data to get total size.
     // used to split up the work for the compute engines
     @Override
-    public Integer getTotalSize() {
+    public int getTotalSize() {
         // TODO: Make this consider the input type
         return this.payloadDataParsed.length;
         // Have to calcuate based on if it's csv or json, what fields ect
@@ -77,6 +81,7 @@ public class InputPayloadImpl implements InputPayload {
     public JSONObject getPayloadData() {
         return this.payloadDataJSON;
     }
+
     @Override
     public int[] getPayloadDataParsed() {
         return payloadDataParsed;
@@ -101,4 +106,5 @@ public class InputPayloadImpl implements InputPayload {
     public void printPayload() {
 
     }
+
 }
