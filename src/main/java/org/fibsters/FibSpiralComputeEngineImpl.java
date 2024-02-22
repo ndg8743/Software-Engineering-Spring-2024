@@ -4,7 +4,11 @@ import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.FibSpiralComputeEngine;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
+import org.fibsters.util.BigIntUtil;
+import org.legacy.BigIntRectangle;
 
+import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
@@ -101,6 +105,52 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
         BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
         //TODO: do the writing that's in the legacy class
 
+        // TODO: change this!
+        double posX = 0.0;
+        double posY = 0.0;
+        int angle = 0;
+        double scaledFib = 0.0;
+        double currentFib = 0.0;
+
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
+        graphics.setColor(Color.BLUE);
+
+        synchronized (image) {
+            // draw a dot at the center of the image
+            double arcX = posX;
+            double arcY = posY;
+
+            if (angle == 0) {
+                arcX = posX - scaledFib;
+                arcY = posY;
+                graphics.setColor(Color.GRAY);
+            } else if (angle == 90) {
+                arcX = posX;
+                arcY = posY;
+                graphics.setColor(Color.WHITE);
+            } else if (angle == 180) {
+                arcX = posX;
+                arcY = posY - scaledFib;
+                graphics.setColor(Color.ORANGE);
+            } else if (angle == 270) {
+                arcX = posX - scaledFib;
+                arcY = posY - scaledFib;
+                graphics.setColor(Color.GREEN);
+            }
+
+            Shape shape = new BigIntRectangle(BigIntUtil.toBigInt(posX), BigIntUtil.toBigInt(posY), BigIntUtil.toBigInt(scaledFib), BigIntUtil.toBigInt(scaledFib));
+
+            graphics.draw(shape);
+            graphics.setColor(Color.RED);
+
+            Arc2D arc = new Arc2D.Double(arcX, arcY, 2 * scaledFib - 1, 2 * scaledFib - 1, angle, 90, Arc2D.OPEN);
+
+            graphics.draw(arc);
+
+            graphics.drawString(Double.toString(currentFib), (int) (posX + scaledFib / 2), (int) (posY + scaledFib / 2));
+        }
+
+        graphics.dispose();
 
         this.status = ComputeJobStatus.COMPLETED;
     }
