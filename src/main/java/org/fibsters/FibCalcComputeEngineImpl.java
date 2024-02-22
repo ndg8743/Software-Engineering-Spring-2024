@@ -17,7 +17,7 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     public FibCalcComputeEngineImpl(OutputPayloadImpl outputPayload) {
         this.status = ComputeJobStatus.UNSTARTED;
         this.startIndex = 0;
-        this.endIndex = 0;
+        this.endIndex = 10;
         this.outputPayload = outputPayload;
     }
 
@@ -100,12 +100,16 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
 
         status = ComputeJobStatus.PENDING;
         int total = endIndex - startIndex;
+        if (total < 0) {
+            throw new IllegalArgumentException("startIndex must be less than or equal to endIndex");
+        }
+
         fibonacci = new int[total];
 
-        if (total == 1) {
+        if (total > 0) {
             fibonacci[0] = calculateNthFibonacci(startIndex);
-        } else {
-            fibonacci[0] = calculateNthFibonacci(startIndex);
+        }
+        if (total > 1) {
             fibonacci[1] = calculateNthFibonacci(startIndex + 1);
 
             for (int i = startIndex + 2; i < endIndex; i++) {

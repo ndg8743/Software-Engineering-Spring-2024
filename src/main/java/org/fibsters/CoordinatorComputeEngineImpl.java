@@ -11,7 +11,7 @@ import java.util.Queue;
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     private FibCalcComputeEngineImpl fibCalcComputeEngine;
-    private final FibSpiralComputeEngineImpl fibSpiralComputeEngine;
+    private FibSpiralComputeEngineImpl fibSpiralComputeEngine;
     private final DataStorageImpl dataStorage;
     private final ComputeJobPoolImpl jobPool;
     private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
@@ -24,7 +24,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
         // Not sure if this is the best way to do this.
 
         //this.fibCalcComputeEngine = new FibCalcComputeEngineImpl(outputPayload);
-        this.fibSpiralComputeEngine = new FibSpiralComputeEngineImpl();
+        //this.fibSpiralComputeEngine = new FibSpiralComputeEngineImpl(outputPayload);
         this.jobPool = new ComputeJobPoolImpl();
         this.jobPool.start();
     }
