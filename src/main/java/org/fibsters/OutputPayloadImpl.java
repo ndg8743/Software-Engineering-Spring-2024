@@ -3,7 +3,9 @@ package org.fibsters;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
@@ -12,6 +14,9 @@ public class OutputPayloadImpl implements OutputPayload {
     private InputPayload inputPayload;
     private ComputeJobStatus status;
     private List<int[]> fibCalcResults;
+
+    // need the output for the spiral as a variable here
+    private BufferedImage fibSpiralResult;
     private List<List<String>> fibCalcStrings;
 
     public OutputPayloadImpl(int index, InputPayload inputPayload, ComputeJobStatus status) {
@@ -22,6 +27,10 @@ public class OutputPayloadImpl implements OutputPayload {
         int[] payloadDataParsed = inputPayload.getPayloadDataParsed();
         this.fibCalcResults = new ArrayList<>();
 
+        // need to parse the height/width
+        // temporarily set it as whatever
+        this.fibSpiralResult = new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB);
+
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcResults.add(new int[payloadDataParsed[i]]);
         }
@@ -31,6 +40,11 @@ public class OutputPayloadImpl implements OutputPayload {
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
         }
+    }
+
+    @Override
+    public BufferedImage getOutputImage() {
+        return this.fibSpiralResult;
     }
 
     @Override
@@ -75,8 +89,8 @@ public class OutputPayloadImpl implements OutputPayload {
             this.fibCalcResults.get(chunk)[i] = fibCalcSubResults[relativeIndex];
         }
 
-        //System.out.println(chunk +" fibCalcResults: " + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
-        //System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
+        System.out.println(chunk + "fibCalcResults:" + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
+        System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
     }
 
     public List<String> toStringList() {

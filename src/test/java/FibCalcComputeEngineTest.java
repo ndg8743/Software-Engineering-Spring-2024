@@ -27,6 +27,8 @@ public class FibCalcComputeEngineTest {
 
         assert status == ComputeJobStatus.PENDING;
 
+        // Start of using real objects not just mockito bs
+        // Everything after this uses real objects
         InputPayloadImpl inputPayload2;
 
         List<Integer> list = new ArrayList<>();

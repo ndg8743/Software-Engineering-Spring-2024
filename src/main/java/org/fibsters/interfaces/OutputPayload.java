@@ -2,6 +2,7 @@ package org.fibsters.interfaces;
 
 import org.fibsters.ComputeJobStatus;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public interface OutputPayload {
@@ -21,5 +22,7 @@ public interface OutputPayload {
     List<int[]> getFibCalcResultsInteger2dList();
 
     void setFibCalcResults(int chunk, int[] fibCalcSubResults, int startIndex, int endIndex);
+
+    BufferedImage getOutputImage();
 
 }

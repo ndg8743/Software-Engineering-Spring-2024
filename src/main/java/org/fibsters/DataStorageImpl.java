@@ -12,6 +12,7 @@ import org.json.JSONException;
 import java.util.Arrays;
 
 public class DataStorageImpl implements DataStorage {
+
     @Override
     public Result<InputPayload> parseInputPayload(String inputPayloadString) {
         JSONObject inputPayloadJson;
