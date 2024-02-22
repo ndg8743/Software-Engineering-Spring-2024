@@ -14,6 +14,7 @@ public class InputPayloadImpl implements InputPayload {
     private String outputType;
     private String outputSource;
     private int[] payloadDataParsed;
+    private String[] payloadOutputArrayParsed;
 
     /**
      * Constructor for InputPayloadImpl
@@ -47,6 +48,15 @@ public class InputPayloadImpl implements InputPayload {
                 for (int i = 0; i < this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length(); i++) {
                     this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").getInt(i);
                 }
+
+                if (this.payloadDataJSON.has("outputLocations")) {
+                    this.payloadOutputArrayParsed = new String[this.payloadDataJSON.getJSONArray("outputLocations").length()];
+
+                    for (int i = 0; i < this.payloadDataJSON.getJSONArray("outputLocations").length(); i++) {
+                        this.payloadOutputArrayParsed[i] = this.payloadDataJSON.getJSONArray("outputLocations").getString(i);
+                    }
+                }
+
             }
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
@@ -105,6 +115,11 @@ public class InputPayloadImpl implements InputPayload {
     @Override
     public void printPayload() {
 
+    }
+
+    @Override
+    public String[] getPayloadOutputArrayParsed() {
+        return payloadOutputArrayParsed;
     }
 
 }

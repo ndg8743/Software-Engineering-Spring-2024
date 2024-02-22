@@ -30,4 +30,14 @@ public class InMemoryDatastore {
         return getProperInputConfig(formattedArray);
     }
 
+    public static JSONObject getProperInputConfig(List<Integer> inputs, List<String> outputLocations) {
+        String formattedArray = "{'CalcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) +
+                ",'outputLocations': " + Arrays.toString(outputLocations.toArray()) +
+                "}";
+
+        return getProperInputConfig(formattedArray);
+    }
+
+
+
 }

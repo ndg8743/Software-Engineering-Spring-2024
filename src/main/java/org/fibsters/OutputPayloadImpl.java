@@ -40,6 +40,7 @@ public class OutputPayloadImpl implements OutputPayload {
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
         }
+
     }
 
     @Override
@@ -49,12 +50,12 @@ public class OutputPayloadImpl implements OutputPayload {
 
     @Override
     public int getIndex() {
-        return 0;
+        return this.index;
     }
 
     @Override
     public void setIndex(int index) {
-
+        this.index = index;
     }
 
     @Override
@@ -103,6 +104,10 @@ public class OutputPayloadImpl implements OutputPayload {
         }
 
         return jsonStringList;
+    }
+
+    public String[] getFileLocations() {
+        return this.inputPayload.getPayloadOutputArrayParsed();
     }
 
 }

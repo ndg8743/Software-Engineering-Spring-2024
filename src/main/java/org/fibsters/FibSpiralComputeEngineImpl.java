@@ -6,12 +6,15 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.util.BigIntUtil;
 import org.legacy.BigIntRectangle;
+import org.legacy.FibonacciFractalGenerator;
 
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
@@ -24,12 +27,89 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     private OutputPayloadImpl outputPayload;
 
     private int chunk;
+    private int maxElement;
+    private double posX;
+    private double posY;
+    private int angle;
+    private double scaledFib;
+    private double currentFib;
 
-    public FibSpiralComputeEngineImpl(OutputPayloadImpl outputPayload) {
+    private static final int WIDTH = 2000;
+    private static final int HEIGHT = 2000;
+
+    public FibSpiralComputeEngineImpl(OutputPayloadImpl outputPayload, int chunk) {
         this.status = ComputeJobStatus.UNSTARTED;
         this.startIndex = 0;
-        this.endIndex = 0;
+
         this.outputPayload = outputPayload;
+        this.chunk = chunk;
+        this.fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
+        this.endIndex = this.fibonacci.length - 1;
+
+        this.maxElement = this.fibonacci.length;
+
+
+    }
+
+    private void generateValues() {
+        int centerX = WIDTH / 2;
+        int centerY = HEIGHT / 2;
+
+        int x = 0;
+        int y = 0;
+        int angle = 0;
+        int largestFib = fibonacci[maxElement - 1];
+        int largestFib2 = fibonacci[maxElement - 2];
+        double scale = 1.0 * WIDTH / (largestFib2 + largestFib);
+
+        for (int i = 0; i < maxElement; i++) {
+            int currentFib = fibonacci[i];
+            int previousFib = i - 1 < 0 ? 0 : fibonacci[i - 1];
+            int previousPreviousFib = i - 2 < 0 ? 0 : fibonacci[i - 2];
+
+            // Calculate next position and angle
+
+            int[] deltaXY = new int[2];
+
+            switch (angle) {
+                case 0:
+                    deltaXY[0] = -previousPreviousFib;
+                    deltaXY[1] = -currentFib;
+                    break;
+                case 90:
+                    deltaXY[0] = -currentFib;
+                    break;
+                case 180:
+                    deltaXY[1] = previousFib;
+                    break;
+                case 270:
+                    deltaXY[0] = previousFib;
+                    deltaXY[1] = -previousPreviousFib;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + angle);
+            }
+
+            System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
+            System.out.println("Angle: " + angle);
+            System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
+
+            x += deltaXY[0];
+            y += deltaXY[1];
+
+            double scaledX = (x * scale) + (centerX);
+            double scaledY = (y * scale) + (centerY);
+            double scaledFib = (currentFib * scale);
+
+            //executor.submit(new FibonacciFractalGenerator.FractalDrawingTask(image, scaledX, scaledY, angle, scaledFib, currentFib));
+            this.posX = scaledX;
+            this.posY = scaledY;
+            this.scaledFib = scaledFib;
+            this.currentFib = currentFib;
+
+            angle += 90;
+            angle %= 360;
+        }
     }
 
     @Override
@@ -74,7 +154,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     @Override
     public ComputeJob clone() {
-        FibSpiralComputeEngineImpl clone = new FibSpiralComputeEngineImpl(this.outputPayload);
+        FibSpiralComputeEngineImpl clone = new FibSpiralComputeEngineImpl(this.outputPayload, this.chunk);
 
         clone.setStatus(this.status);
         clone.setStartIndex(this.startIndex);
@@ -103,16 +183,19 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     @Override
     public void run() {
+
+
         this.status = ComputeJobStatus.RUNNING;
+        this.generateValues();
+
+        draw();
+
+        this.status = ComputeJobStatus.COMPLETED;
+    }
+
+    private void draw() {
         BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
         //TODO: do the writing that's in the legacy class
-
-        // TODO: change this!
-        double posX = 0.0;
-        double posY = 0.0;
-        int angle = 0;
-        double scaledFib = 0.0;
-        double currentFib = 0.0;
 
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.BLUE);
@@ -154,7 +237,19 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         graphics.dispose();
 
-        this.status = ComputeJobStatus.COMPLETED;
+        String fileName = this.outputPayload.getFileLocations()[this.chunk];
+
+        saveImage(image, fileName);
+    }
+
+    private void saveImage(BufferedImage image, String fileName) {
+        try {
+            ImageIO.write(image, "png", new File(fileName));
+
+            System.out.println("Fibonacci fractal image saved as " + fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
