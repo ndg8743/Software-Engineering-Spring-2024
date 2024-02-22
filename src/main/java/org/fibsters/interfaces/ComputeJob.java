@@ -3,17 +3,20 @@ package org.fibsters.interfaces;
 import org.fibsters.ComputeJobStatus;
 
 public interface ComputeJob extends Runnable {
+
     void setInputPayload(InputPayload inputPayload);
+
     OutputPayload getOutputPayload();
 
     ComputeJobStatus getStatus();
 
     void setStatus(ComputeJobStatus status);
 
-    Integer getTotalSize();
-    void setStartIndex(Integer startIndex);
+    int getTotalSize();
 
-    void setEndIndex(Integer endIndex);
+    void setStartIndex(int startIndex);
+
+    void setEndIndex(int endIndex);
 
     InputPayload getInputPayload();
 

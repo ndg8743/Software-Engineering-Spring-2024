@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ComputeJobPoolImpl implements ComputeJobPool {
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ExecutorService executor; // 🤘
     private Queue<ComputeJob> jobs;
@@ -20,14 +21,16 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     private final ArrayList<ComputeJob> finishedJobs = new ArrayList<>();
 
     private ComputeJob currentJob;
-    Future<?>[] futureFibTasks;
+    private final Future<?>[] futureFibTasks;
 
     public ComputeJobPoolImpl() {
         int maxNumThreads = getMaxNumThreads();
-        executor = Executors.newFixedThreadPool(maxNumThreads);
-        jobs = new ConcurrentLinkedQueue<ComputeJob>();
-        futureFibTasks = new Future[maxNumThreads];
+
+        this.executor = Executors.newFixedThreadPool(maxNumThreads);
+        this.jobs = new ConcurrentLinkedQueue<>();
+        this.futureFibTasks = new Future[maxNumThreads];
     }
+
     @Override
     public void addJob(ComputeJob job) {
         jobs.add(job);
@@ -50,6 +53,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     private void processJob(ComputeJob job) {
         int numThreads = getMaxNumThreads();
         int threadGroupSize = job.getTotalSize() / numThreads; // 90 fib numbers / 4 threads = 22.5
+
         for (int i = numThreads; i >= 0; i--) {
             int start = i * threadGroupSize;
             int end = (i + 1) * threadGroupSize;
@@ -57,11 +61,14 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             if (i == numThreads - 1) { // threadgroup didnt divide evenly so pick up the remaining elements
                 end = job.getTotalSize();
             }
+
             // important to set the start and end indices for the job so that it knows what to calculate
             job.setStartIndex(start);
             job.setEndIndex(end);
+
             futureFibTasks[i] = executor.submit(job);
         }
+
         executor.execute(job);
     }
 
@@ -69,21 +76,27 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         if (jobs.isEmpty()) {
             return;
         }
+
         if (currentJob == null || currentJob.getStatus() == ComputeJobStatus.COMPLETED) {
             finishedJobs.add(currentJob);
             currentJob = jobs.poll();
+
             if (currentJob != null) {
                 processJob(currentJob);
             }
         }
+
         // if the current job is not done, then we need to check if it's done
         // loop over futures
         int count = 0;
-        for (int i = 0; i < futureFibTasks.length; i++) {
-            if (futureFibTasks[i].isDone()) {
+
+        for (Future<?> futureFibTask : futureFibTasks) {
+            if (futureFibTask.isDone()) {
                 count++;
             }
         }
+
+        // TODO: could this result in a NPE?
         if (count == futureFibTasks.length) {
             currentJob.setStatus(ComputeJobStatus.COMPLETED);
         }
@@ -95,9 +108,11 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         if (finishedJobs.contains(job)) {
             return ComputeJobStatus.COMPLETED;
         }
+
         if (job == currentJob) {
             return ComputeJobStatus.RUNNING;
         }
+
         return ComputeJobStatus.PENDING; // assume in queue
     }
 
@@ -105,4 +120,5 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     public void getJobResults(ComputeJob job) {
 
     }
+
 }

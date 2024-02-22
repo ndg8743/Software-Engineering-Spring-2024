@@ -6,12 +6,13 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class InputPayloadImpl implements InputPayload {
-    String uniqueID;
-    String inputType;
-    String delimiter;
-    JSONObject payloadData;
-    String outputType;
-    String outputSource;
+
+    private final String uniqueID;
+    private final String inputType;
+    private final String delimiter;
+    private JSONObject payloadData;
+    private final String outputType;
+    private final String outputSource;
 
     /**
      * Constructor for InputPayloadImpl
@@ -35,6 +36,7 @@ public class InputPayloadImpl implements InputPayload {
             this.delimiter = inputConfig.getString("delimiter");
             this.outputType = inputConfig.getString("outputType");
             this.outputSource = inputConfig.getString("outputSource");
+
             if (Objects.equals(this.inputType, "json")) {
                 String payloadDataString = inputConfig.getString("payloadData");
                 this.payloadData = new JSONObject(payloadDataString);
@@ -43,6 +45,7 @@ public class InputPayloadImpl implements InputPayload {
             throw new Exception("Error: " + e.getMessage());
         }
     }
+
     @Override
     public String getUniqueID() {
         return this.uniqueID;
@@ -56,8 +59,8 @@ public class InputPayloadImpl implements InputPayload {
     // parse data to get total size.
     // used to split up the work for the compute engines
     @Override
-    public Integer getTotalSize() {
-        return null; // Have to calcuate based on if it's csv or json, what fields ect
+    public int getTotalSize() {
+        return 0; // Have to calcuate based on if it's csv or json, what fields ect
     }
 
     @Override
@@ -89,4 +92,5 @@ public class InputPayloadImpl implements InputPayload {
     public void printPayload() {
 
     }
+
 }

@@ -6,10 +6,10 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
 
-
 import java.util.Queue;
 
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
+
     private FibCalcComputeEngineImpl fibCalcComputeEngine;
     private FibSpiralComputeEngineImpl fibSpiralComputeEngine;
     private DataStorageImpl dataStorage;
@@ -18,6 +18,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage) {
         this.dataStorage = dataStorage;
+
         // The rest is very tightly coupled to the implementation of the compute engines.
         // Not sure if this is the best way to do this.
         this.fibCalcComputeEngine = new FibCalcComputeEngineImpl();
@@ -64,4 +65,5 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     public ComputeJobStatus getJobStatus(ComputeJob job) {
         return null;
     }
+
 }

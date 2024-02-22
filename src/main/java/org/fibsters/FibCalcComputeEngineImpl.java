@@ -1,26 +1,24 @@
 package org.fibsters;
 
-import org.fibsters.ComputeJobStatus;
-import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.FibCalcComputeEngine;
 import org.fibsters.interfaces.InputPayload;
-import org.fibsters.interfaces.OutputPayload;
 
 public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
+
     private static final double GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // Phi
     private int[] fibonacci;
-    ComputeJobStatus status;
-    Integer startIndex;
-    Integer endIndex;
-    InputPayload inputPayload; // used for reference potentially(has uuid)
-    Integer chunkSize;
+    private ComputeJobStatus status;
+    private int startIndex;
+    private int endIndex;
+    private InputPayload inputPayload; // used for reference potentially(has uuid)
+    private int chunkSize;
 
     OutputPayloadImpl outputPayload;
 
     public FibCalcComputeEngineImpl() {
-        status = ComputeJobStatus.UNSTARTED;
-        startIndex = 0;
-        endIndex = 0;
+        this.status = ComputeJobStatus.UNSTARTED;
+        this.startIndex = 0;
+        this.endIndex = 0;
     }
 
     @Override
@@ -44,17 +42,17 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     }
 
     @Override
-    public Integer getTotalSize() {
+    public int getTotalSize() {
         return inputPayload.getTotalSize();
     }
 
     @Override
-    public void setStartIndex(Integer startIndex) {
+    public void setStartIndex(int startIndex) {
         this.startIndex = startIndex;
     }
 
     @Override
-    public void setEndIndex(Integer endIndex) {
+    public void setEndIndex(int endIndex) {
         this.endIndex = endIndex;
     }
 
@@ -92,4 +90,5 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     public void setOutputPayload(OutputPayloadImpl outputPayload) {
         this.outputPayload = outputPayload;
     }
+
 }

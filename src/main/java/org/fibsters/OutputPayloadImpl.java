@@ -1,33 +1,32 @@
 package org.fibsters;
-import org.fibsters.ComputeJobStatus;
+
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
-    int index;
-    InputPayload inputPayload;
-    ComputeJobStatus status;
-    List<List<Integer>> fibCalcResults;
-    List<List<String>> fibCalcStrings;
 
-
+    private final int index;
+    private final InputPayload inputPayload;
+    private final ComputeJobStatus status;
+    private List<List<Integer>> fibCalcResults;
+    private List<List<String>> fibCalcStrings;
 
     public OutputPayloadImpl(int index, InputPayload inputPayload, ComputeJobStatus status) {
         this.index = index;
         this.inputPayload = inputPayload;
         this.status = status;
     }
+
     @Override
-    public Integer getIndex() {
-        return null;
+    public int getIndex() {
+        return 0;
     }
 
     @Override
-    public void setIndex(Integer index) {
+    public void setIndex(int index) {
 
     }
 

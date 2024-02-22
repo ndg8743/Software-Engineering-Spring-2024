@@ -5,32 +5,32 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.Result;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.ComputeJob;
-import org.fibsters.FailureResult;
-import org.fibsters.SuccessResult;
 import org.json.JSONObject;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.Arrays;
 
 public class DataStorageImpl implements DataStorage {
+
     @Override
     public Result<InputPayload> parseInputPayload(String inputPayloadString) {
         JSONObject inputPayloadJson;
+
         // Attempt to parse the JSON string into a JSON object
         try {
             inputPayloadJson = new JSONObject(inputPayloadString);
         } catch (JSONException e) {
-            FailureResult result = new FailureResult<>(e.getStackTrace().toString(),"Input is not JSON: " + e.getMessage());
-            return result;
+            return new FailureResult<>(Arrays.toString(e.getStackTrace()),"Input is not JSON: " + e.getMessage());
         }
+
         // Attempt to create an InputPayload object from the JSON object(keys need to match up/data types need to match up)
         try {
             InputPayload inputPayload = new InputPayloadImpl(inputPayloadJson);
-            SuccessResult result = new SuccessResult<>(inputPayload);
-            return result;
+
+            return new SuccessResult<>(inputPayload);
         } catch (Exception e) {
-            FailureResult result = new FailureResult<>(e.getStackTrace().toString(),"Input JSON not in correct format " + e.getMessage());
-            return result;
+            return new FailureResult<>(Arrays.toString(e.getStackTrace()),"Input JSON not in correct format " + e.getMessage());
         }
     }
 
@@ -68,4 +68,5 @@ public class DataStorageImpl implements DataStorage {
     public Result<InputPayload> loadFromFile(InputPayload inputPayload) {
         return null;
     }
+
 }

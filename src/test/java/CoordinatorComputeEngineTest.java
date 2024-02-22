@@ -9,17 +9,18 @@ import org.mockito.Mockito;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class CoordinatorComputeEngineTest {
     @Test
     public void testCompute() {
         CoordinatorComputeEngineImpl computeAPI = Mockito.mock(CoordinatorComputeEngineImpl.class);
         String inputString = InMemoryDatastore.getProperInputConfigString("{'CalcFibNumbersUpTo': [1, 10, 25]}");
+
         System.out.println(inputString);
+
         Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
+
         assert result.isSuccess();
         assert result.getData().getInputType().equals("json");
 
@@ -38,9 +39,13 @@ public class CoordinatorComputeEngineTest {
                 break;
             }
         }
+
         Result<OutputPayload> output = computeAPI.parseOutputPayload(job);
+
         assert output.isSuccess();
+
         List<List<Integer>> fibCalcResults = output.getData().getFibCalcResultsInteger2dList();
+
         assert fibCalcResults.size() == 3;
         assert fibCalcResults.get(0).size() == 1;
     }

@@ -8,8 +8,9 @@ import java.net.InetSocketAddress;
 
 // TODO: migrate to Spring Boot or another framework.
 public class FibHttpHandlerAPI {
+
     private CoordinatorComputeEngineImpl api;
-    private Integer port;
+    private final int port;
     private HttpServer server; // abstract away the implementation of the server.
 
     private FibHttpHandler fibHttpHandler;
@@ -24,12 +25,15 @@ public class FibHttpHandlerAPI {
 
         server = HttpServer.create();
         server.bind(new InetSocketAddress(port), 0);
+
         if (fibHttpHandler == null) {
             fibHttpHandler = new FibHttpHandler(api);
         }
-        server.createContext("/fib", (HttpHandler) fibHttpHandler);
+
+        server.createContext("/fib", fibHttpHandler);
         server.setExecutor(null); // creates a default executor
         server.start();
+
         System.out.println("Server started at http://127.0.0.1:" + port + "/fib");
     }
 
