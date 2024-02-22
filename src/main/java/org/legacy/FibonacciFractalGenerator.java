@@ -264,7 +264,7 @@ public class FibonacciFractalGenerator {
         return BigInteger.valueOf((long) number);
     }
     public static void main(String[] args) {
-        new FibonacciFractalGenerator().generateFractal(20);
+        new FibonacciFractalGenerator().generateFractal(3);
     }
 
 }
