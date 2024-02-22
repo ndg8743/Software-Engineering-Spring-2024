@@ -43,9 +43,10 @@ public class OutputPayloadImpl implements OutputPayload {
     }
 
     @Override
-    public BufferedImage getOutputImage(){
+    public BufferedImage getOutputImage() {
         return this.fibSpiralResult;
     }
+
     @Override
     public int getIndex() {
         return 0;
@@ -88,7 +89,7 @@ public class OutputPayloadImpl implements OutputPayload {
             this.fibCalcResults.get(chunk)[i] = fibCalcSubResults[relativeIndex];
         }
 
-        System.out.println(chunk +" fibCalcResults: " + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
+        System.out.println(chunk + "fibCalcResults:" + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
         System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
     }
 
