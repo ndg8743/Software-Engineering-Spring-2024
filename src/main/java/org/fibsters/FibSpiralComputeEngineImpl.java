@@ -7,7 +7,9 @@ import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.util.BigIntUtil;
 import org.legacy.BigIntRectangle;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 
