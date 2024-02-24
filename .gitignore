@@ -1,6 +1,6 @@
 ### Custom ###
 fibonacci_fractal.png
-*fibspiral.png
+/*fibsprial.png
 
 ### BoilerPlate ###
 target/
@@ -41,3 +41,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
