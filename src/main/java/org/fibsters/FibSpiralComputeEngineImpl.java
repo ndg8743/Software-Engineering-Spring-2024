@@ -51,67 +51,6 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     }
 
-    private void generateValues() {
-        int centerX = WIDTH / 2;
-        int centerY = HEIGHT / 2;
-
-        int x = 0;
-        int y = 0;
-        int angle = 0;
-        int largestFib = fibonacci[maxElement - 1];
-        int largestFib2 = fibonacci[maxElement - 2];
-        double scale = 1.0 * WIDTH / (largestFib2 + largestFib);
-
-        for (int i = 0; i < maxElement; i++) {
-            int currentFib = fibonacci[i];
-            int previousFib = i - 1 < 0 ? 0 : fibonacci[i - 1];
-            int previousPreviousFib = i - 2 < 0 ? 0 : fibonacci[i - 2];
-
-            // Calculate next position and angle
-
-            int[] deltaXY = new int[2];
-
-            switch (angle) {
-                case 0:
-                    deltaXY[0] = -previousPreviousFib;
-                    deltaXY[1] = -currentFib;
-                    break;
-                case 90:
-                    deltaXY[0] = -currentFib;
-                    break;
-                case 180:
-                    deltaXY[1] = previousFib;
-                    break;
-                case 270:
-                    deltaXY[0] = previousFib;
-                    deltaXY[1] = -previousPreviousFib;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + angle);
-            }
-
-            System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
-            System.out.println("Angle: " + angle);
-            System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
-
-            x += deltaXY[0];
-            y += deltaXY[1];
-
-            double scaledX = (x * scale) + (centerX);
-            double scaledY = (y * scale) + (centerY);
-            double scaledFib = (currentFib * scale);
-
-            //executor.submit(new FibonacciFractalGenerator.FractalDrawingTask(image, scaledX, scaledY, angle, scaledFib, currentFib));
-            this.posX = scaledX;
-            this.posY = scaledY;
-            this.scaledFib = scaledFib;
-            this.currentFib = currentFib;
-
-            angle += 90;
-            angle %= 360;
-        }
-    }
-
     @Override
     public void setInputPayload(InputPayload inputPayload) {
         this.inputPayload = inputPayload;
@@ -188,9 +127,72 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
         this.status = ComputeJobStatus.RUNNING;
         this.generateValues();
 
-        draw();
+        //draw();
 
         this.status = ComputeJobStatus.COMPLETED;
+    }
+
+    private void generateValues() {
+        int centerX = WIDTH / 2;
+        int centerY = HEIGHT / 2;
+
+        int x = 0;
+        int y = 0;
+        //int angle = 0;
+        int largestFib = fibonacci[maxElement - 1];
+        int largestFib2 = fibonacci[maxElement - 2];
+        double scale = 1.0 * WIDTH / (largestFib2 + largestFib);
+
+        for (int i = 0; i < maxElement; i++) {
+            int currentFib = fibonacci[i];
+            int previousFib = i - 1 < 0 ? 0 : fibonacci[i - 1];
+            int previousPreviousFib = i - 2 < 0 ? 0 : fibonacci[i - 2];
+
+            // Calculate next position and angle
+
+            int[] deltaXY = new int[2];
+
+            switch (angle) {
+                case 0:
+                    deltaXY[0] = -previousPreviousFib;
+                    deltaXY[1] = -currentFib;
+                    break;
+                case 90:
+                    deltaXY[0] = -currentFib;
+                    break;
+                case 180:
+                    deltaXY[1] = previousFib;
+                    break;
+                case 270:
+                    deltaXY[0] = previousFib;
+                    deltaXY[1] = -previousPreviousFib;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + this.angle);
+            }
+
+            System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
+            System.out.println("Angle: " + angle);
+            System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
+
+            x += deltaXY[0];
+            y += deltaXY[1];
+
+            double scaledX = (x * scale) + (centerX);
+            double scaledY = (y * scale) + (centerY);
+            double scaledFib = (currentFib * scale);
+
+            //executor.submit(new FibonacciFractalGenerator.FractalDrawingTask(image, scaledX, scaledY, angle, scaledFib, currentFib));
+            this.posX = scaledX;
+            this.posY = scaledY;
+            this.scaledFib = scaledFib;
+            this.currentFib = currentFib;
+
+            draw();
+
+            this.angle += 90;
+            this.angle %= 360;
+        }
     }
 
     private void draw() {
