@@ -57,6 +57,17 @@
                 <protoc.platform>osx-aarch_64</protoc.platform>
             </properties>
         </profile>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <properties>
+                <protoc.platform>linux-x86_64</protoc.platform>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -111,12 +122,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.10.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
