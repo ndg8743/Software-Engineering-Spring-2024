@@ -29,6 +29,7 @@ import org.fibsters.ComputeInputServiceGrpc;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class CliClient {
 
     private static String networkRequestType = "POST";
 
+    // TODO: this is very hacky, properly handle this later!
+    private static String userSpecifiedFileName = "fibbonacci";
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Starting the compute job client...");
@@ -57,6 +61,9 @@ public class CliClient {
             if ("GRPC".equalsIgnoreCase(response)) {
                 CliClient.networkRequestType = "GRPC";
             }
+
+            System.out.println("Set file name (Don't specify file type!): ");
+            userSpecifiedFileName = scanner.nextLine();
 
             while (true) {
                 List<Integer> userInput = getUserInputArr();
@@ -184,7 +191,7 @@ public class CliClient {
         if (image != null) {
             System.out.println("Saving the image to a file...");
             try {
-                ImageIO.write(image, "png", new java.io.File("fibonacci.png"));
+                ImageIO.write(image, "png", new File(userSpecifiedFileName + ".png"));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
