@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+import "InputPayloadMessage.proto";
+import "Result.proto";
+
+message InputPayloadResponse {
+
+  Result result = 1;
+  InputPayloadMessage message = 2;
+
+}

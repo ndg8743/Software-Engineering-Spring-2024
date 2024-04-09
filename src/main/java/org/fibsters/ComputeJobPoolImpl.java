@@ -89,6 +89,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     // process jobs one at a time in queue, using all available threads per job
     private void processJob(ComputeJob job) {
         job.setStatus(ComputeJobStatus.RUNNING);
+
         int numThreads = getMaxNumThreads();
 
         //int threadGroupSize = Math.round(job.getTotalSize() / numThreads);
@@ -115,9 +116,11 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
         if (sanityCheckCount < numThreads) {
             int diff = Math.abs(numThreads - sanityCheckCount);
+
             threadsPerSubjob[0] += diff; // add the difference to the first subjob
         } else if (sanityCheckCount > numThreads) {
             int diff = Math.abs(numThreads - sanityCheckCount);
+
             threadsPerSubjob[biggestSubJobIndex] -= diff; // subtract the difference from the biggest subjob
         }
 
@@ -128,7 +131,6 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
             for (int j = 0; j < threadsPerSubjob[i]; j++) {
                 //System.out.println("Subjob " + i + " has " + threadsPerSubjob[i] + " threads");
-
                 int start = j * threadGroupSize;
                 int end = (j + 1) * threadGroupSize;
 
@@ -216,16 +218,19 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         if (currentJob != null && Objects.equals(currentJob.getOutputPayload().getUniqueID(), id)) {
             return currentJob;
         }
+
         for (ComputeJob job : finishedJobs) {
             if (Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
                 return job;
             }
         }
+
         for (ComputeJob job : jobs) {
             if (Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
                 return job;
             }
         }
+
         return null;
     }
 }

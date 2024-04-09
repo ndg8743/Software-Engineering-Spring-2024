@@ -4,6 +4,8 @@ import org.fibsters.InputPayloadImpl;
 
 public interface InputPayload extends Payload {
 
+    void postDeserialize() throws Exception;
+
     String getUniqueID();
 
     String getInputType();
@@ -13,8 +15,6 @@ public interface InputPayload extends Payload {
     int[] getPayloadDataParsed();
 
     String getOutputType();
-
-    String getOutputData();
 
     InputPayloadImpl.DirectiveType getDirective();
 

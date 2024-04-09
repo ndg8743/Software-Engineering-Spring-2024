@@ -1,7 +1,6 @@
 package org.fibsters;
-import com.google.gson.Gson;
+
 import org.fibsters.interfaces.Result;
-import org.json.JSONObject;
 
 public class FailureResult<T> implements Result {
 
@@ -34,7 +33,5 @@ public class FailureResult<T> implements Result {
     public String getErrorMessage() {
         return this.errorMessage;
     }
-
-
 
 }

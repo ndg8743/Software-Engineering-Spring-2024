@@ -1,21 +1,15 @@
 package org.fibsters;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.fibsters.ComputeInputServiceGrpc.ComputeInputServiceImplBase;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.fibsters.interfaces.ComputeJob;
-import org.fibsters.interfaces.InputPayload;
-import org.fibsters.interfaces.OutputPayload;
-import org.fibsters.interfaces.Result;
-import org.json.JSONObject;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class FibHttpHandler implements HttpHandler {
+public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpHandler {
 
     private final CoordinatorComputeEngineImpl computeAPI;
 
@@ -59,6 +53,13 @@ public class FibHttpHandler implements HttpHandler {
     example valid input: 'calcFibNumbersUpTo': [1, 10, 25]}
     curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"calcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
      */
+
+    private String processInputStringForOutput(String inputString) {
+        String response = computeAPI.processInputStringForOutput(inputString);
+
+        return response;
+    }
+
     private void handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inputStream = httpExchange.getRequestBody();
 
@@ -66,7 +67,8 @@ public class FibHttpHandler implements HttpHandler {
 
         System.out.println(inputString);
 
-        String response = computeAPI.processInputStringForOutput(inputString);
+        String response = processInputStringForOutput(inputString);
+
         System.out.println("response" + response);
 
         /*
