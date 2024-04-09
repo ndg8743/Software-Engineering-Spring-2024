@@ -3,6 +3,10 @@ package org.cliclient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,6 +24,7 @@ import org.fibsters.InputPayloadResponseOuterClass;
 import org.fibsters.InputPayloadServiceGrpc;
 import org.fibsters.interfaces.PayloadData;
 import org.fibsters.interfaces.Result;
+import org.fibsters.ComputeInputServiceGrpc;
 
 
 import javax.imageio.ImageIO;
@@ -41,10 +46,17 @@ public class CliClient {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static String networkRequestType = "POST";
 
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Starting the compute job client...");
+
+            System.out.println("Set Network Request Type (POST/GRPC), POST by default");
+            String response = scanner.nextLine();
+            if ("GRPC".equalsIgnoreCase(response)) {
+                CliClient.networkRequestType = "GRPC";
+            }
 
             while (true) {
                 List<Integer> userInput = getUserInputArr();
@@ -57,7 +69,7 @@ public class CliClient {
                     doJob(jobId);
                 }
                 System.out.println("Do you want to start another job? (yes/no)");
-                String response = scanner.nextLine();
+                response = scanner.nextLine();
                 if (!"yes".equalsIgnoreCase(response)) {
                     break;
                 }
@@ -209,7 +221,7 @@ public class CliClient {
     }
 
     private static String startComputeJob(String json) {
-        String response = sendPostRequest(json);
+        String response = sendNetworkRequest(json); //sendNetworkRequest(networkRequestType, json);
         if (response != null) {
             Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {
             }.getType();
@@ -232,7 +244,7 @@ public class CliClient {
     }
     private static ComputeJobStatus checkJobStatus(String json) {
         // Send the status check request and return the job status
-        String response = sendPostRequest(json);
+        String response = sendNetworkRequest(json);
         if (response != null) {
             Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {}.getType();
             Result<OutputPayloadImpl> status = gson_noBuff.fromJson(response, resultType);
@@ -244,6 +256,37 @@ public class CliClient {
     private static String fetchJobResult(String json) {
         // Fetch and return the job result
         return sendPostRequest(json);
+    }
+
+    private static String sendNetworkRequest(String json){
+        return switch (networkRequestType) { // insane lam
+            case "GRPC" -> sendGrpcRequest(json);
+            case "POST" -> sendPostRequest(json);
+            default -> null;
+        };
+    }
+
+    private static String sendGrpcRequest(String json){
+        //System.out.println("[Fib] (Test2) - Test compute engine from client with grpc...");
+        // Starting compute job with initial JSON
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
+
+        ComputeInputServiceGrpc.ComputeInputServiceBlockingStub stub = ComputeInputServiceGrpc.newBlockingStub(channel);
+
+        ComputeInputRequestOuterClass.ComputeInputRequest request = ComputeInputRequestOuterClass.ComputeInputRequest.newBuilder().setInput(json).build();
+
+        ComputeInputResponseOuterClass.ComputeInputResponse response = stub.processInputStringForOutput(request);
+        String jsonResponse;
+        try {
+            ComputeInputMessageOuterClass.ComputeInputMessage responseMessage = response.getResult().getData().unpack(ComputeInputMessageOuterClass.ComputeInputMessage.class);
+            //System.out.println("Message from server: " + response.getResult().getErrorMessage() + " \t Response from server:" + responseMessage.getInput());
+            jsonResponse = responseMessage.getInput();
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+
+        channel.shutdown();
+        return jsonResponse;
     }
 
     private static String sendPostRequest(String json) {
