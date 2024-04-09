@@ -1,20 +1,23 @@
 package org.fibsters;
+import com.google.gson.Gson;
 import org.fibsters.interfaces.Result;
 import org.json.JSONObject;
 
 public class FailureResult<T> implements Result {
 
     private T data;
+    private Boolean success = false;
     private final String errorMessage;
 
     public FailureResult(T data, String errorMessage) {
+        // TODO: maybe log to file or something
         this.data = data;
         this.errorMessage = errorMessage;
     }
 
     @Override
     public boolean isSuccess() {
-        return false;
+        return success;
     }
 
     @Override
@@ -32,14 +35,6 @@ public class FailureResult<T> implements Result {
         return this.errorMessage;
     }
 
-    public JSONObject toJSON() {
-        JSONObject result = new JSONObject();
 
-        result.put("success", this.isSuccess());
-        result.put("data", this.data.toString());
-        result.put("errorMessage", this.errorMessage);
-
-        return result;
-    }
 
 }

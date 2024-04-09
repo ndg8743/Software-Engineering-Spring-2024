@@ -5,6 +5,7 @@ import org.fibsters.interfaces.ComputeJobPool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -211,4 +212,20 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
     }
 
+    public ComputeJob getJobById(String id) {
+        if (currentJob != null && Objects.equals(currentJob.getOutputPayload().getUniqueID(), id)) {
+            return currentJob;
+        }
+        for (ComputeJob job : finishedJobs) {
+            if (Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
+                return job;
+            }
+        }
+        for (ComputeJob job : jobs) {
+            if (Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
+                return job;
+            }
+        }
+        return null;
+    }
 }

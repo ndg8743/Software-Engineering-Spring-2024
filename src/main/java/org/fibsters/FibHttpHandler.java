@@ -1,10 +1,16 @@
 package org.fibsters;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.fibsters.interfaces.ComputeJob;
 import org.fibsters.interfaces.InputPayload;
+import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
+import org.json.JSONObject;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,6 +42,9 @@ public class FibHttpHandler implements HttpHandler {
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
         String response = "get: hello world from fib handler";
+        //String exampleJson = "{'CalcFibNumbersUpTo': [1, 10, 25]}";
+
+        //computeAPI.parseInputPayload(exampleJson);
 
         sendResponse(httpExchange, response);
     }
@@ -47,6 +56,8 @@ public class FibHttpHandler implements HttpHandler {
     curl.exe -X POST http://127.0.0.1:8080/fib -d '{\"input\": \"hello\"}'
     example valid input:
     curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"csv\", \"delimiter\": \";\", \"outputType\": \"json\", \"outputSource\": \"output.json\" }' http://localhost:8080/fib
+    example valid input: 'CalcFibNumbersUpTo': [1, 10, 25]}
+    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"CalcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
      */
     private void handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inputStream = httpExchange.getRequestBody();
@@ -55,11 +66,30 @@ public class FibHttpHandler implements HttpHandler {
 
         System.out.println(inputString);
 
+        String response = computeAPI.processInputStringForOutput(inputString);
+        System.out.println("response" + response);
+
+        /*
+
         Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
 
         // TODO: handle the result
+        ComputeJob job = computeAPI.createComputeJobFromInputPayload(result.getData());
+        computeAPI.queueJob(job);
 
-        String response = result.toJSON().toString();
+        OutputPayload output = job.getOutputPayload();
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter())
+                .create();
+        String response = "";
+        try {
+            response = gson.toJson(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+         */
 
         sendResponse(httpExchange, response);
     }

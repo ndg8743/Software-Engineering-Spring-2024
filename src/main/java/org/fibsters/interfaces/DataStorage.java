@@ -1,9 +1,11 @@
 package org.fibsters.interfaces;
 
+import org.fibsters.InputPayloadImpl;
+
 public interface DataStorage {
 
     // Sanitizes and validates the input and output payloads.
-    Result<InputPayload> parseInputPayload(String inputPayloadString);
+    Result<InputPayloadImpl> parseInputPayload(String inputPayloadString);
 
     Result<OutputPayload> parseOutputPayload(ComputeJob completedJob);
 
