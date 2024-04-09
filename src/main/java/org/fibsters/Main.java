@@ -26,7 +26,7 @@ public class Main {
 
     private static void handleGrpcServer(int port) {
         try {
-            Server server = ServerBuilder.forPort(port).addService(new DataStorageImpl()).build();
+            Server server = ServerBuilder.forPort(port).addService(new DataStorageImpl()).addService(new ComputeGrpcService(api)).build();
 
             server.start();
             System.out.println("[Fib] GRPC Server started at " + server.getPort());

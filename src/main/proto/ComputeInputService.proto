@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+import "ComputeInputRequest.proto";
+import "ComputeInputResponse.proto";
+
+service ComputeInputService {
+
+  rpc ProcessInputStringForOutput (ComputeInputRequest) returns (ComputeInputResponse) {}
+
+}

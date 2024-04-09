@@ -11,6 +11,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.fibsters.*;
+import org.fibsters.ComputeInputMessageOuterClass;
+import org.fibsters.ComputeInputRequestOuterClass;
+import org.fibsters.ComputeInputResponseOuterClass;
+import org.fibsters.InputPayloadMessageOuterClass;
 import org.fibsters.InputPayloadRequestOuterClass;
 import org.fibsters.InputPayloadResponseOuterClass;
 import org.fibsters.InputPayloadServiceGrpc;
@@ -58,8 +62,8 @@ public class CliClient {
                     break;
                 }
             }
-        } else { //test data store from client
-            System.out.println("Test datastore from client with grpc...");
+        } else if (args[0].equalsIgnoreCase("test1")) { //test data store from client
+            System.out.println("[Fib] (Test1) - Test datastore from client with grpc...");
             // Starting compute job with initial JSON
             ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
 
@@ -69,7 +73,31 @@ public class CliClient {
 
             InputPayloadResponseOuterClass.InputPayloadResponse response = stub.parseMessage(request);
 
-            System.out.println("Message: " + response.getMessage() + " \t Result:" + response.getResult());
+            try {
+                InputPayloadMessageOuterClass.InputPayloadMessage inputPayload = response.getResult().getData().unpack(InputPayloadMessageOuterClass.InputPayloadMessage.class);
+                System.out.println("Message: " + response.getMessage() + " \t CalcFibNumbers:" + inputPayload.getPayloadData().getCalcFibNumbersUpToList().toString());
+            } catch (InvalidProtocolBufferException e) {
+                throw new RuntimeException(e);
+            }
+
+            channel.shutdown();
+        } else if (args[0].equalsIgnoreCase("test2")) { //test data store from client
+            System.out.println("[Fib] (Test2) - Test compute engine from client with grpc...");
+            // Starting compute job with initial JSON
+            ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
+
+            ComputeInputServiceGrpc.ComputeInputServiceBlockingStub stub = ComputeInputServiceGrpc.newBlockingStub(channel);
+            String jsontest = "{\"payloadData\":{\"calcFibNumbersUpTo\":[1,10,25,70]},\"directive\":\"SUBMIT_COMPUTE_JOB\"}";
+            ComputeInputRequestOuterClass.ComputeInputRequest request = ComputeInputRequestOuterClass.ComputeInputRequest.newBuilder().setInput(jsontest).build();
+
+            ComputeInputResponseOuterClass.ComputeInputResponse response = stub.processInputStringForOutput(request);
+
+            try {
+                ComputeInputMessageOuterClass.ComputeInputMessage responseMessage = response.getResult().getData().unpack(ComputeInputMessageOuterClass.ComputeInputMessage.class);
+                System.out.println("Message from server: " + response.getResult().getErrorMessage() + " \t Response from server:" + responseMessage.getInput());
+            } catch (InvalidProtocolBufferException e) {
+                throw new RuntimeException(e);
+            }
 
             channel.shutdown();
         }
@@ -194,7 +222,7 @@ public class CliClient {
     private static Result<OutputPayloadImpl> getJobById(String id) {
         PayloadWrapper payloadWrapper = new PayloadWrapper(id, InputPayloadImpl.DirectiveType.GET_JOB_BY_ID, null);
         String json = gson_noBuff.toJson(payloadWrapper);
-        String response = sendPostRequest(json);
+        String response = sendNetworkRequest(json);
         if (response != null) {
             Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {
             }.getType();

@@ -1,5 +1,6 @@
 package org.fibsters;
 
+import com.google.protobuf.Any;
 import io.grpc.stub.StreamObserver;
 import org.fibsters.InputPayloadRequestOuterClass.InputPayloadRequest;
 import org.fibsters.InputPayloadMessageOuterClass.InputPayloadMessage;

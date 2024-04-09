@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package org.fibsters;
 
-import "InputPayloadMessage.proto";
+import "google/protobuf/any.proto";
 
 message Result {
 
   bool success = 1;
-  InputPayloadMessage data = 2;
+  google.protobuf.Any data = 2;
   string error_message = 3;
 
 }
