@@ -27,22 +27,28 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     public String processInputStringForOutput(String inputPayloadString) {
         Result<InputPayloadImpl> inputPayloadResult = parseInputPayload(inputPayloadString);
+
         if (!inputPayloadResult.isSuccess()) {
             return (new FailureResult<>(null, "Failed to parse input payload: " + inputPayloadResult.getErrorMessage())).toJSONString();
         }
 
         InputPayloadImpl inputPayload = inputPayloadResult.getData();
         String id;
+
         switch (inputPayload.getDirective()) {
             case InputPayloadImpl.DirectiveType.GET_JOB_STATUS_BY_ID:
                 id = inputPayload.getUniqueID();
+
                 return (new SuccessResult<>(getJobById(id).getOutputPayload())).toJSONStringShallow();
             case InputPayloadImpl.DirectiveType.GET_JOB_BY_ID:
                 id = inputPayload.getUniqueID();
+
                 return (new SuccessResult<>(getJobById(id).getOutputPayload()).toJSONString());
             case InputPayloadImpl.DirectiveType.SUBMIT_COMPUTE_JOB:
                 ComputeJob job = createComputeJobFromInputPayload(inputPayload);
+
                 queueJob(job);
+
                 return (new SuccessResult<>(job.getOutputPayload())).toJSONStringShallow();
             default:
                 return (new FailureResult<>(null, "Invalid directive: " + inputPayload.getDirective())).toJSONString();

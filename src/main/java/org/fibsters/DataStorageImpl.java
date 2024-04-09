@@ -1,15 +1,16 @@
 package org.fibsters;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import io.grpc.stub.StreamObserver;
+import org.fibsters.InputPayloadRequestOuterClass.InputPayloadRequest;
+import org.fibsters.InputPayloadMessageOuterClass.InputPayloadMessage;
+import org.fibsters.InputPayloadResponseOuterClass.InputPayloadResponse;
+import org.fibsters.InputPayloadMessageOuterClass.PayloadDataImpl;
 import org.fibsters.interfaces.DataStorage;
+import org.fibsters.InputPayloadServiceGrpc.InputPayloadServiceImplBase;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.Result;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.ComputeJob;
-import org.json.JSONObject;
-
-import org.json.JSONException;
 
 import java.util.Arrays;
 
@@ -20,9 +21,6 @@ public class DataStorageImpl implements DataStorage {
         // Attempt to create an InputPayload object from the JSON object(keys need to match up/data types need to match up)
         try {
             InputPayloadImpl inputPayload = InputPayloadImpl.createInputPayloadFromString(inputPayloadString);
-            //Gson gson = new Gson();
-            //InputPayloadImpl inputPayload = gson.fromJson(inputPayloadString, InputPayloadImpl.class);
-            //InputPayload inputPayload = new InputPayloadImpl(inputPayloadJson);
 
             return new SuccessResult<>(inputPayload);
         } catch (Exception e) {

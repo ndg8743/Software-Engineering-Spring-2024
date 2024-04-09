@@ -11,6 +11,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.fibsters.*;
+import org.fibsters.InputPayloadRequestOuterClass;
+import org.fibsters.InputPayloadResponseOuterClass;
+import org.fibsters.InputPayloadServiceGrpc;
 import org.fibsters.interfaces.PayloadData;
 import org.fibsters.interfaces.Result;
 
@@ -36,25 +39,39 @@ public class CliClient {
 
 
     public static void main(String[] args) {
-        System.out.println("Starting the compute job client...");
-        // Starting compute job with initial JSON
+        if (args.length == 0) {
+            System.out.println("Starting the compute job client...");
 
-        while (true) {
+            while (true) {
+                List<Integer> userInput = getUserInputArr();
+                int[] userinputArr = userInput.stream().mapToInt(i -> i).toArray();
 
-            List<Integer> userInput = getUserInputArr();
-            int[] userinputArr = userInput.stream().mapToInt(i -> i).toArray();
+                String startJobJson = createStartJobFromInput(userinputArr);
+                String jobId = startComputeJob(startJobJson);
 
-            String startJobJson = createStartJobFromInput(userinputArr);
-            String jobId = startComputeJob(startJobJson);
-
-            if (jobId != null) {
-                doJob(jobId);
+                if (jobId != null) {
+                    doJob(jobId);
+                }
+                System.out.println("Do you want to start another job? (yes/no)");
+                String response = scanner.nextLine();
+                if (!"yes".equalsIgnoreCase(response)) {
+                    break;
+                }
             }
-            System.out.println("Do you want to start another job? (yes/no)");
-            String response = scanner.nextLine();
-            if (!"yes".equalsIgnoreCase(response)) {
-                break;
-            }
+        } else { //test data store from client
+            System.out.println("Test datastore from client with grpc...");
+            // Starting compute job with initial JSON
+            ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
+
+            InputPayloadServiceGrpc.InputPayloadServiceBlockingStub stub = InputPayloadServiceGrpc.newBlockingStub(channel);
+            String jsontest = "{\"payloadData\":{\"calcFibNumbersUpTo\":[1,10,25,70]},\"directive\":\"SUBMIT_COMPUTE_JOB\"}";
+            InputPayloadRequestOuterClass.InputPayloadRequest request = InputPayloadRequestOuterClass.InputPayloadRequest.newBuilder().setInput(jsontest).build();
+
+            InputPayloadResponseOuterClass.InputPayloadResponse response = stub.parseMessage(request);
+
+            System.out.println("Message: " + response.getMessage() + " \t Result:" + response.getResult());
+
+            channel.shutdown();
         }
     }
 

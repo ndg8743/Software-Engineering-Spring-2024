@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+enum DirectiveType {
+
+  GET_JOB_STATUS_BY_ID = 0;
+  GET_JOB_BY_ID = 1;
+  SUBMIT_COMPUTE_JOB = 2;
+
+}
+
+message PayloadDataImpl {
+
+  repeated int32 calc_fib_numbers_up_to = 1;
+  repeated string output_locations = 2;
+
+}
+
+message InputPayloadMessage {
+
+  string unique_id = 1;
+
+  DirectiveType directive = 2;
+
+  string input_type = 3;
+  string delimiter = 4;
+
+  PayloadDataImpl payload_data = 5;
+
+  string output_type = 6;
+  string output_source = 7;
+
+}

@@ -12,11 +12,14 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
+
     public enum ImageType {
         PNG,
         NULL
     }
+
     ImageType imageType;
+
     public BufferedImageTypeAdapter() {
         imageType = ImageType.PNG;
     }
@@ -24,26 +27,34 @@ public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
     public BufferedImageTypeAdapter(ImageType imageType) {
         this.imageType = imageType;
     }
+
     @Override
-    public void write(JsonWriter out, BufferedImage image) throws IOException {
+    public void write(JsonWriter jsonWriter, BufferedImage image) throws IOException {
         if (this.imageType == ImageType.NULL) {
-            out.nullValue();
+            jsonWriter.nullValue();
             return;
         }
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         String imageExtension = "png";
+
         if (this.imageType == ImageType.PNG) {
             imageExtension = "png";
         }
+
         ImageIO.write(image, imageExtension, bos);
+
         byte[] imageBytes = bos.toByteArray();
         String imageBase64 = Base64.getEncoder().encodeToString(imageBytes);
-        out.value(imageBase64);
+
+        jsonWriter.value(imageBase64);
     }
 
     @Override
-    public BufferedImage read(JsonReader in) throws IOException {
-        byte[] imageBytes = Base64.getDecoder().decode(in.nextString());
+    public BufferedImage read(JsonReader jsonReader) throws IOException {
+        byte[] imageBytes = Base64.getDecoder().decode(jsonReader.nextString());
+
         return ImageIO.read(new ByteArrayInputStream(imageBytes));
     }
+
 }

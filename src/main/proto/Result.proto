@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+import "InputPayloadMessage.proto";
+
+message Result {
+
+  bool success = 1;
+  InputPayloadMessage data = 2;
+  string error_message = 3;
+
+}
