@@ -32,10 +32,10 @@ public class InMemoryDatastore {
 
         properInputPayloadJSON.put("uniqueID", "1234");
         properInputPayloadJSON.put("inputType", "json");
-        JSONObject payloadData = !customPayloadData.isEmpty() ? new JSONObject(customPayloadData) : new JSONObject("{'CalcFibNumbersUpTo': [6, 7, 8]}");
+        JSONObject payloadData = !customPayloadData.isEmpty() ? new JSONObject(customPayloadData) : new JSONObject("{'calcFibNumbersUpTo': [6, 7, 8]}");
         properInputPayloadJSON.put("payloadData", payloadData);
 
-        //properInputPayloadJSON.put("payloadData", !customPayloadData.isEmpty() ? customPayloadData : "{'CalcFibNumbersUpTo': [6, 7, 8]}");
+        //properInputPayloadJSON.put("payloadData", !customPayloadData.isEmpty() ? customPayloadData : "{'calcFibNumbersUpTo': [6, 7, 8]}");
         properInputPayloadJSON.put("delimiter", "");
         properInputPayloadJSON.put("outputType", "json");
         properInputPayloadJSON.put("outputSource", "output.json");
@@ -44,13 +44,13 @@ public class InMemoryDatastore {
     }
 
     public static JSONObject getProperInputConfig(List<Integer> inputs) {
-        String formattedArray = "{'CalcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) + "}";
+        String formattedArray = "{'calcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) + "}";
 
         return getProperInputConfig(formattedArray);
     }
 
     public static JSONObject getProperInputConfig(List<Integer> inputs, List<String> outputLocations) {
-        String formattedArray = "{'CalcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) +
+        String formattedArray = "{'calcFibNumbersUpTo': " + Arrays.toString(inputs.toArray()) +
                 ",'outputLocations': " + Arrays.toString(outputLocations.toArray()) +
                 "}";
 

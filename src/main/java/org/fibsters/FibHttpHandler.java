@@ -42,7 +42,7 @@ public class FibHttpHandler implements HttpHandler {
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
         String response = "get: hello world from fib handler";
-        //String exampleJson = "{'CalcFibNumbersUpTo': [1, 10, 25]}";
+        //String exampleJson = "{'calcFibNumbersUpTo': [1, 10, 25]}";
 
         //computeAPI.parseInputPayload(exampleJson);
 
@@ -56,8 +56,8 @@ public class FibHttpHandler implements HttpHandler {
     curl.exe -X POST http://127.0.0.1:8080/fib -d '{\"input\": \"hello\"}'
     example valid input:
     curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"csv\", \"delimiter\": \";\", \"outputType\": \"json\", \"outputSource\": \"output.json\" }' http://localhost:8080/fib
-    example valid input: 'CalcFibNumbersUpTo': [1, 10, 25]}
-    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"CalcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
+    example valid input: 'calcFibNumbersUpTo': [1, 10, 25]}
+    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"calcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
      */
     private void handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inputStream = httpExchange.getRequestBody();

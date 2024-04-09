@@ -32,7 +32,7 @@ public class FibSpiralComputeEngineTest {
         // need to make a real outputpayload that has the output of what testfibcalc has
         try {
             inputPayload = InMemoryDatastore.convertJSONObjToInputPayload(InMemoryDatastore.getProperInputConfig(list, fileLocations));
-            //inputPayload = new InputPayloadImpl(); // "{'CalcFibNumbersUpTo': [1, 10, 25]}"
+            //inputPayload = new InputPayloadImpl(); // "{'calcFibNumbersUpTo': [1, 10, 25]}"
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

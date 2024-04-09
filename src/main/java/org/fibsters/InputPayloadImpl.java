@@ -70,10 +70,10 @@ public class InputPayloadImpl implements InputPayload {
                 break;
             case SUBMIT_COMPUTE_JOB:
                 if (this.payloadData == null) {
-                    throw new Exception("Error: Must have payloadData with CalcFibNumbersUpTo inside it");
+                    throw new Exception("Error: Must have payloadData with calcFibNumbersUpTo inside it");
                 }
                 if (this.payloadData.calcFibNumbersUpTo == null) {
-                    throw new Exception("Error: Must have CalcFibNumbersUpTo");
+                    throw new Exception("Error: Must have calcFibNumbersUpTo");
                 }
 
                 break;
@@ -110,10 +110,10 @@ public class InputPayloadImpl implements InputPayload {
                     this.payloadDataJSON = new JSONObject(inputConfig.getString("payloadData"));
                 }
 
-                this.payloadDataParsed = new int[this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length()];
+                this.payloadDataParsed = new int[this.payloadDataJSON.getJSONArray("calcFibNumbersUpTo").length()];
 
-                for (int i = 0; i < this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length(); i++) {
-                    this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").getInt(i);
+                for (int i = 0; i < this.payloadDataJSON.getJSONArray("calcFibNumbersUpTo").length(); i++) {
+                    this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("calcFibNumbersUpTo").getInt(i);
                 }
 
                 if (this.payloadDataJSON.has("outputLocations")) {

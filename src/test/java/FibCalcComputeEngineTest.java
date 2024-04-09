@@ -39,7 +39,7 @@ public class FibCalcComputeEngineTest {
         try {
             inputPayload2 = InMemoryDatastore.convertJSONObjToInputPayload(InMemoryDatastore.getProperInputConfig(list));
 
-            //inputPayload2 = new InputPayloadImpl(); // "{'CalcFibNumbersUpTo': [1, 10, 25]}"
+            //inputPayload2 = new InputPayloadImpl(); // "{'calcFibNumbersUpTo': [1, 10, 25]}"
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

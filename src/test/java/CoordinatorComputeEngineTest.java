@@ -22,7 +22,7 @@ public class CoordinatorComputeEngineTest {
         DataStorageImpl dataStorage = new DataStorageImpl();
         CoordinatorComputeEngineImpl computeAPI = new CoordinatorComputeEngineImpl(dataStorage);
 
-        String inputString = InMemoryDatastore.getProperInputConfigString("SUBMIT_COMPUTE_JOB","{'CalcFibNumbersUpTo': [1, 10, 25]}");
+        String inputString = InMemoryDatastore.getProperInputConfigString("SUBMIT_COMPUTE_JOB","{'calcFibNumbersUpTo': [1, 10, 25]}");
 
         System.out.println(inputString);
 
@@ -77,7 +77,7 @@ public class CoordinatorComputeEngineTest {
     public void testComputeOld() {
         CoordinatorComputeEngineImpl computeAPI = Mockito.mock(CoordinatorComputeEngineImpl.class);
 
-        String inputString = InMemoryDatastore.getProperInputConfigString("{'CalcFibNumbersUpTo': [1, 10, 25]}");
+        String inputString = InMemoryDatastore.getProperInputConfigString("{'calcFibNumbersUpTo': [1, 10, 25]}");
 
         System.out.println(inputString);
 
