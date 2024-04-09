@@ -3,15 +3,15 @@ package org.fibsters;
 import org.fibsters.interfaces.PayloadData;
 
 public class PayloadDataImpl implements PayloadData {
-    public int[] CalcFibNumbersUpTo;
+    public int[] calcFibNumbersUpTo;
     public String[] outputLocations;
     @Override
     public int[] getCalcFibNumbersUpTo() {
-        return CalcFibNumbersUpTo;
+        return calcFibNumbersUpTo;
     }
 
     @Override
     public void setCalcFibNumbersUpTo(int[] calcFibNumbersUpTo) {
-        CalcFibNumbersUpTo = calcFibNumbersUpTo;
+        this.calcFibNumbersUpTo = calcFibNumbersUpTo;
     }
 }

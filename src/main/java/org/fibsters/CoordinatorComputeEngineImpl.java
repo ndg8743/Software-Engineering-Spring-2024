@@ -33,7 +33,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
         InputPayloadImpl inputPayload = inputPayloadResult.getData();
         String id;
-        switch(inputPayload.getDirective()) {
+        switch (inputPayload.getDirective()) {
             case InputPayloadImpl.DirectiveType.GET_JOB_STATUS_BY_ID:
                 id = inputPayload.getUniqueID();
                 return (new SuccessResult<>(getJobById(id).getOutputPayload())).toJSONStringShallow();

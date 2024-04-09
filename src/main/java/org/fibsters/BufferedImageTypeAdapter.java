@@ -32,7 +32,7 @@ public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         String imageExtension = "png";
-        if(this.imageType == ImageType.PNG) {
+        if (this.imageType == ImageType.PNG) {
             imageExtension = "png";
         }
         ImageIO.write(image, imageExtension, bos);

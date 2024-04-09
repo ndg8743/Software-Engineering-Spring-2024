@@ -2,8 +2,6 @@ package org.fibsters;
 
 import com.google.gson.Gson;
 import org.fibsters.interfaces.InputPayload;
-import org.fibsters.PayloadDataImpl;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +72,7 @@ public class InputPayloadImpl implements InputPayload {
                 if (this.payloadData == null) {
                     throw new Exception("Error: Must have payloadData with CalcFibNumbersUpTo inside it");
                 }
-                if (this.payloadData.CalcFibNumbersUpTo == null) {
+                if (this.payloadData.calcFibNumbersUpTo == null) {
                     throw new Exception("Error: Must have CalcFibNumbersUpTo");
                 }
 
@@ -149,7 +147,7 @@ public class InputPayloadImpl implements InputPayload {
     @Override
     public int getTotalSize() {
         // TODO: Make this consider the input type
-        return this.payloadData.CalcFibNumbersUpTo.length;
+        return this.payloadData.calcFibNumbersUpTo.length;
         // Have to calcuate based on if it's csv or json, what fields ect
     }
 
@@ -170,7 +168,7 @@ public class InputPayloadImpl implements InputPayload {
 
     @Override
     public int[] getPayloadDataParsed() {
-        return payloadData.CalcFibNumbersUpTo;
+        return payloadData.calcFibNumbersUpTo;
     }
 
     @Override
