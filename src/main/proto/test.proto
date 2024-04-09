@@ -1,7 +1,0 @@
-// test.proto
-package org.fibsters;
-
-message Test {
-  optional int32 result = 1;
-  required int32 errorCode = 2;
-}

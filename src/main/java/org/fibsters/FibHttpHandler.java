@@ -53,8 +53,6 @@ public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpH
     example valid input: 'calcFibNumbersUpTo': [1, 10, 25]}
     curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"calcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
      */
-    // @Override
-    //    public void processInputStringForOutput(InputPayloadRequest request, StreamObserver<InputPayloadResponse> responseObserver) {
 
     private String processInputStringForOutput(String inputString) {
         String response = computeAPI.processInputStringForOutput(inputString);
