@@ -1,12 +1,10 @@
 package org.fibsters.interfaces;
 
-import org.json.JSONObject;
-
 public interface Payload {
 
     String getDelimiter();
 
-    JSONObject getPayloadData();
+    PayloadData getPayloadData();
 
     String getOutputType();
 

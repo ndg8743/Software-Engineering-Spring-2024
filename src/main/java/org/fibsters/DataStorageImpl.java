@@ -1,5 +1,7 @@
 package org.fibsters;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.fibsters.interfaces.DataStorage;
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.Result;
@@ -14,19 +16,13 @@ import java.util.Arrays;
 public class DataStorageImpl implements DataStorage {
 
     @Override
-    public Result<InputPayload> parseInputPayload(String inputPayloadString) {
-        JSONObject inputPayloadJson;
-
-        // Attempt to parse the JSON string into a JSON object
-        try {
-            inputPayloadJson = new JSONObject(inputPayloadString);
-        } catch (JSONException e) {
-            return new FailureResult<>(Arrays.toString(e.getStackTrace()), "Input is not JSON: " + e.getMessage());
-        }
-
+    public Result<InputPayloadImpl> parseInputPayload(String inputPayloadString) {
         // Attempt to create an InputPayload object from the JSON object(keys need to match up/data types need to match up)
         try {
-            InputPayload inputPayload = new InputPayloadImpl(inputPayloadJson);
+            InputPayloadImpl inputPayload = InputPayloadImpl.createInputPayloadFromString(inputPayloadString);
+            //Gson gson = new Gson();
+            //InputPayloadImpl inputPayload = gson.fromJson(inputPayloadString, InputPayloadImpl.class);
+            //InputPayload inputPayload = new InputPayloadImpl(inputPayloadJson);
 
             return new SuccessResult<>(inputPayload);
         } catch (Exception e) {

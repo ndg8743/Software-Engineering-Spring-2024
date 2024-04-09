@@ -2,6 +2,7 @@ package org.fibsters;
 
 import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
+import org.fibsters.util.UniqueIDGenerator;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -9,9 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class OutputPayloadImpl implements OutputPayload {
-
+    private String uniqueID;
     private int index;
-    private InputPayload inputPayload;
+    private InputPayloadImpl inputPayload;
     private ComputeJobStatus status;
     private List<int[]> fibCalcResults;
 
@@ -19,7 +20,9 @@ public class OutputPayloadImpl implements OutputPayload {
     private BufferedImage fibSpiralResult;
     private List<List<String>> fibCalcStrings;
 
-    public OutputPayloadImpl(int index, InputPayload inputPayload, ComputeJobStatus status) {
+    public OutputPayloadImpl(int index, InputPayloadImpl inputPayload, ComputeJobStatus status) {
+        // set id to random number
+        this.uniqueID = UniqueIDGenerator.generateUniqueID();
         this.index = index;
         this.inputPayload = inputPayload;
         this.status = status;
@@ -40,12 +43,20 @@ public class OutputPayloadImpl implements OutputPayload {
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
         }
-
+    }
+    @Override
+    public String getUniqueID() {
+        return this.uniqueID;
     }
 
     @Override
     public BufferedImage getOutputImage() {
         return this.fibSpiralResult;
+    }
+
+    @Override
+    public Object toJSON() {
+        return null;
     }
 
     @Override
@@ -102,7 +113,6 @@ public class OutputPayloadImpl implements OutputPayload {
                 jsonStringList.add(Integer.toString(integer));
             }
         }
-
         return jsonStringList;
     }
 

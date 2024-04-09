@@ -5,6 +5,7 @@ import org.json.JSONObject;
 public class SuccessResult<T> implements Result {
 
     private T data;
+    private Boolean success = true;
 
     public SuccessResult(T data) {
         this.data = data;
@@ -12,7 +13,7 @@ public class SuccessResult<T> implements Result {
 
     @Override
     public boolean isSuccess() {
-        return true;
+        return success;
     }
 
     @Override
@@ -28,16 +29,6 @@ public class SuccessResult<T> implements Result {
     @Override
     public String getErrorMessage() {
         return null;
-    }
-
-    public JSONObject toJSON() {
-        JSONObject result = new JSONObject();
-
-        result.put("success", this.isSuccess());
-        result.put("data", this.data.toString());
-        result.put("errorMessage", "");
-
-        return result;
     }
 
 }

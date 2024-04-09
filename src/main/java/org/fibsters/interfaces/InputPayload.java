@@ -1,6 +1,6 @@
 package org.fibsters.interfaces;
 
-import org.json.JSONObject;
+import org.fibsters.InputPayloadImpl;
 
 public interface InputPayload extends Payload {
 
@@ -8,13 +8,15 @@ public interface InputPayload extends Payload {
 
     String getInputType();
 
-    JSONObject getPayloadData();
+    PayloadData getPayloadData();
 
     int[] getPayloadDataParsed();
 
     String getOutputType();
 
     String getOutputData();
+
+    InputPayloadImpl.DirectiveType getDirective();
 
     String getDelimiter();
 

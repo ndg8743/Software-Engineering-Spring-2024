@@ -31,7 +31,8 @@ public class FibSpiralComputeEngineTest {
         Collections.addAll(fileLocations, "1fibsprial.png", "2fibsprial.png", "3fibsprial.png");
         // need to make a real outputpayload that has the output of what testfibcalc has
         try {
-            inputPayload = new InputPayloadImpl(InMemoryDatastore.getProperInputConfig(list, fileLocations)); // "{'CalcFibNumbersUpTo': [1, 10, 25]}"
+            inputPayload = InMemoryDatastore.convertJSONObjToInputPayload(InMemoryDatastore.getProperInputConfig(list, fileLocations));
+            //inputPayload = new InputPayloadImpl(); // "{'calcFibNumbersUpTo': [1, 10, 25]}"
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
