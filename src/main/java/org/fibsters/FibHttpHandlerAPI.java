@@ -35,9 +35,8 @@ public class FibHttpHandlerAPI {
         System.out.println("Server started at http://127.0.0.1:" + port + "/fib");
     }
 
-    public CoordinatorComputeEngineImpl getComputeApi(){
+    public CoordinatorComputeEngineImpl getComputeApi() {
         return this.api;
-
     }
 
 }

@@ -258,7 +258,7 @@ public class CliClient {
         return sendPostRequest(json);
     }
 
-    private static String sendNetworkRequest(String json){
+    private static String sendNetworkRequest(String json) {
         return switch (networkRequestType) { // insane lam
             case "GRPC" -> sendGrpcRequest(json);
             case "POST" -> sendPostRequest(json);
@@ -266,7 +266,7 @@ public class CliClient {
         };
     }
 
-    private static String sendGrpcRequest(String json){
+    private static String sendGrpcRequest(String json) {
         //System.out.println("[Fib] (Test2) - Test compute engine from client with grpc...");
         // Starting compute job with initial JSON
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
