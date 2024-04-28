@@ -37,6 +37,8 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     private static final int WIDTH = 2000;
     private static final int HEIGHT = 2000;
 
+    private String fileName = "";
+
     public FibSpiralComputeEngineImpl(OutputPayloadImpl outputPayload, int chunk) {
         this.status = ComputeJobStatus.UNSTARTED;
         this.startIndex = 0;
@@ -50,6 +52,21 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
 
     }
+
+    public FibSpiralComputeEngineImpl(OutputPayloadImpl outputPayload, int chunk, String fileName) {
+        this.status = ComputeJobStatus.UNSTARTED;
+        this.startIndex = 0;
+
+        this.outputPayload = outputPayload;
+        this.chunk = chunk;
+        this.fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
+        this.endIndex = this.fibonacci.length - 1;
+
+        this.maxElement = this.fibonacci.length;
+
+        this.fileName = fileName;
+    }
+
 
     @Override
     public void setInputPayload(InputPayload inputPayload) {
@@ -202,6 +219,10 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.BLUE);
 
+        String debugMessage = "[Fib] (Draw) - ";
+
+        //System.out.println(debugMessage + " start angle: " + angle);
+
         synchronized (image) {
             // draw a dot at the center of the image
             double arcX = posX;
@@ -210,19 +231,31 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
             if (angle == 0) {
                 arcX = posX - scaledFib;
                 arcY = posY;
+
                 graphics.setColor(Color.GRAY);
+
+                //System.out.println(debugMessage + " <gray> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 90) {
                 arcX = posX;
                 arcY = posY;
+
                 graphics.setColor(Color.WHITE);
+
+                //System.out.println(debugMessage + " <white> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 180) {
                 arcX = posX;
                 arcY = posY - scaledFib;
+
                 graphics.setColor(Color.ORANGE);
+
+                //System.out.println(debugMessage + " <orange> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 270) {
                 arcX = posX - scaledFib;
                 arcY = posY - scaledFib;
+
                 graphics.setColor(Color.GREEN);
+
+                //System.out.println(debugMessage + " <green> " + "arcX: " + arcX + ", arcY: " + arcY);
             }
 
             Shape shape = new BigIntRectangle(BigIntUtil.toBigInt(posX), BigIntUtil.toBigInt(posY), BigIntUtil.toBigInt(scaledFib), BigIntUtil.toBigInt(scaledFib));
@@ -239,9 +272,11 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         graphics.dispose();
 
-        String fileName = this.outputPayload.getFileLocations()[this.chunk];
+        if (this.fileName.isEmpty()) {
+            this.fileName = this.outputPayload.getFileLocations()[this.chunk];
+        }
 
-        saveImage(image, fileName);
+        saveImage(image, fileName + ".png");
     }
 
     private void saveImage(BufferedImage image, String fileName) {

@@ -169,19 +169,25 @@ public class CliClient {
     private static void handleCompletedResults(Result<OutputPayloadImpl> result) {
         if (result != null) {
             OutputPayloadImpl outputPayload = result.getData();
+
             // Print FibCalcResults
             List<int[]> fibCalcResults = outputPayload.getFibCalcResultsInteger2dList();
             for (int[] fibCalcResult : fibCalcResults) {
                 for (int i : fibCalcResult) {
                     System.out.print(i + " ");
+
+                    FibSpiralComputeEngineImpl fibSpiralComputeEngine = new FibSpiralComputeEngineImpl(outputPayload, i, userSpecifiedFileName);
+
+                    fibSpiralComputeEngine.setInputPayload(outputPayload.getInputPayload());
+                    fibSpiralComputeEngine.run();
                 }
                 System.out.println();
             }
 
             // save the buffered image to a file
-            if (outputPayload.getOutputImage() != null) {
+/*            if (outputPayload.getOutputImage() != null) {
                 saveImageToFile(outputPayload);
-            }
+            }*/
 
         }
     }
