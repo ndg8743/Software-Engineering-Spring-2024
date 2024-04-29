@@ -47,16 +47,19 @@ public class InputPayloadImpl implements InputPayload {
                 if (this.uniqueID == null) {
                     throw new Exception("Error: Must have a uniqueID");
                 }
+
                 break;
             case GET_JOB_BY_ID:
                 if (this.uniqueID == null) {
                     throw new Exception("Error: Must have a uniqueID");
                 }
+
                 break;
             case SUBMIT_COMPUTE_JOB:
                 if (this.payloadData == null) {
                     throw new Exception("Error: Must have payloadData with calcFibNumbersUpTo inside it");
                 }
+
                 if (this.payloadData.calcFibNumbersUpTo == null) {
                     throw new Exception("Error: Must have calcFibNumbersUpTo");
                 }
@@ -72,6 +75,7 @@ public class InputPayloadImpl implements InputPayload {
         List<String> directiveTypeNames = directiveTypes.stream()
                 .map(Enum::name)
                 .toList();
+
         return directiveTypeNames.toString();
     }
 
@@ -90,8 +94,8 @@ public class InputPayloadImpl implements InputPayload {
     @Override
     public int getTotalSize() {
         // TODO: Make this consider the input type
+        // Have to calculate based on if it's csv or json, what fields ect
         return this.payloadData.calcFibNumbersUpTo.length;
-        // Have to calcuate based on if it's csv or json, what fields ect
     }
 
     @Override

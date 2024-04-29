@@ -28,4 +28,5 @@ public interface OutputPayload {
     BufferedImage getOutputImage();
 
     Object toJSON();
+
 }

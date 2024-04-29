@@ -3,7 +3,6 @@ package org.cliclient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -38,6 +37,7 @@ import java.util.Scanner;
 
 
 public class CliClient {
+
     private static final Gson gson_noBuff = new GsonBuilder()
             .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter(BufferedImageTypeAdapter.ImageType.NULL))
             .create();
@@ -50,7 +50,7 @@ public class CliClient {
     private static String networkRequestType = "POST";
 
     // TODO: this is very hacky, properly handle this later!
-    private static String userSpecifiedFileName = "fibbonacci";
+    private static String userSpecifiedFileName = "fib_client";
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -88,6 +88,7 @@ public class CliClient {
             }
         } else if (args[0].equalsIgnoreCase("test1")) { //test data store from client
             System.out.println("[Fib] (Test1) - Test datastore from client with grpc...");
+
             // Starting compute job with initial JSON
             ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
 
@@ -99,7 +100,8 @@ public class CliClient {
 
             try {
                 InputPayloadMessageOuterClass.InputPayloadMessage inputPayload = response.getResult().getData().unpack(InputPayloadMessageOuterClass.InputPayloadMessage.class);
-                System.out.println("Message: " + response.getMessage() + " \t CalcFibNumbers:" + inputPayload.getPayloadData().getCalcFibNumbersUpToList().toString());
+
+                System.out.println("Message: " + response.getMessage() + " \t CalcFibNumbers:" + inputPayload.getPayloadData().getCalcFibNumbersUpToList());
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException(e);
             }
@@ -107,6 +109,7 @@ public class CliClient {
             channel.shutdown();
         } else if (args[0].equalsIgnoreCase("test2")) { //test data store from client
             System.out.println("[Fib] (Test2) - Test compute engine from client with grpc...");
+
             // Starting compute job with initial JSON
             ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
 
@@ -118,6 +121,7 @@ public class CliClient {
 
             try {
                 ComputeInputMessageOuterClass.ComputeInputMessage responseMessage = response.getResult().getData().unpack(ComputeInputMessageOuterClass.ComputeInputMessage.class);
+
                 System.out.println("Message from server: " + response.getResult().getErrorMessage() + " \t Response from server:" + responseMessage.getInput());
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException(e);
@@ -135,6 +139,8 @@ public class CliClient {
             PayloadWrapper payloadWrapper = new PayloadWrapper(jobId, InputPayloadImpl.DirectiveType.GET_JOB_STATUS_BY_ID, null);
             String statusJson = gson_noBuff.toJson(payloadWrapper);
             ComputeJobStatus status = checkJobStatus(statusJson);
+
+            // TODO: this can be null!
             switch (status) {
                 case UNSTARTED:
                     System.out.println("Job is unstarted. Waiting for a few seconds before checking again...");
@@ -159,7 +165,6 @@ public class CliClient {
                     wait(1000);
                     break;
             }
-
         }
     }
 
@@ -186,7 +191,7 @@ public class CliClient {
                 System.out.println();
             }
 
-            saveImage(outputPayload.getOutputImage(), "fib_client.png");
+            saveImage(outputPayload.getOutputImage(), userSpecifiedFileName + ".png");
         }
     }
 
@@ -203,40 +208,52 @@ public class CliClient {
     private static List<Integer> getUserInputArr() {
         List<Integer> userInput = new ArrayList<>();
         System.out.println("Enter numbers (enter ';' to finish):");
+
         while (true) {
             String input = scanner.nextLine();
+
             if (";".equalsIgnoreCase(input)) {
                 break;
             }
+
             try {
                 int number = Integer.parseInt(input);
+
                 userInput.add(number);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number or ';'.");
             }
         }
+
         return userInput;
     }
 
     public static String createStartJobFromInput(int[] userinput) {
         // Create an instance of PayloadData
         PayloadData payloadData = new PayloadDataImpl();
+
         payloadData.setCalcFibNumbersUpTo(userinput);
+
         PayloadWrapper payloadWrapper = new PayloadWrapper(null, InputPayloadImpl.DirectiveType.SUBMIT_COMPUTE_JOB, payloadData);
 
         // Convert the PayloadData object to a JSON string
         String startJobJson = gson_noBuff.toJson(payloadWrapper);
+
         return startJobJson;
     }
 
     private static String startComputeJob(String json) {
         String response = sendNetworkRequest(json); //sendNetworkRequest(networkRequestType, json);
+
         if (response != null) {
             Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {
             }.getType();
+
             SuccessResult<OutputPayloadImpl> status = gson_noBuff.fromJson(response, resultType);
+
             return status.getData().getUniqueID();
         }
+
         return null;
     }
 
@@ -244,21 +261,30 @@ public class CliClient {
         PayloadWrapper payloadWrapper = new PayloadWrapper(id, InputPayloadImpl.DirectiveType.GET_JOB_BY_ID, null);
         String json = gson_noBuff.toJson(payloadWrapper);
         String response = sendNetworkRequest(json);
+
         if (response != null) {
             Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {
             }.getType();
+
             return gson_noBuff.fromJson(response, resultType);
         }
+
         return null;
     }
+
     private static ComputeJobStatus checkJobStatus(String json) {
         // Send the status check request and return the job status
         String response = sendNetworkRequest(json);
+
         if (response != null) {
-            Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {}.getType();
+            Type resultType = new TypeToken<SuccessResult<OutputPayloadImpl>>() {
+            }.getType();
+
             Result<OutputPayloadImpl> status = gson_noBuff.fromJson(response, resultType);
+
             return status.getData().getStatus();
         }
+
         return null;
     }
 
@@ -286,6 +312,7 @@ public class CliClient {
 
         ComputeInputResponseOuterClass.ComputeInputResponse response = stub.processInputStringForOutput(request);
         String jsonResponse;
+
         try {
             ComputeInputMessageOuterClass.ComputeInputMessage responseMessage = response.getResult().getData().unpack(ComputeInputMessageOuterClass.ComputeInputMessage.class);
             //System.out.println("Message from server: " + response.getResult().getErrorMessage() + " \t Response from server:" + responseMessage.getInput());
@@ -295,6 +322,7 @@ public class CliClient {
         }
 
         channel.shutdown();
+
         return jsonResponse;
     }
 
@@ -315,6 +343,8 @@ public class CliClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null;
     }
+
 }

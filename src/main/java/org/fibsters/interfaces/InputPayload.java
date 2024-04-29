@@ -23,4 +23,5 @@ public interface InputPayload extends Payload {
     int getTotalSize();
 
     String[] getPayloadOutputArrayParsed();
+
 }

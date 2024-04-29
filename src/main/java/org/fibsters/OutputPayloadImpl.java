@@ -44,6 +44,7 @@ public class OutputPayloadImpl implements OutputPayload {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
         }
     }
+
     @Override
     public String getUniqueID() {
         return this.uniqueID;

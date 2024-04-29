@@ -3,7 +3,8 @@ package org.cliclient;
 import org.fibsters.InputPayloadImpl;
 import org.fibsters.interfaces.PayloadData;
 
-class PayloadWrapper {
+public class PayloadWrapper {
+
     private String uniqueID;
     private InputPayloadImpl.DirectiveType directive;
     private PayloadData payloadData;
@@ -13,4 +14,5 @@ class PayloadWrapper {
         this.directive = directive;
         this.payloadData = payloadData;
     }
+
 }

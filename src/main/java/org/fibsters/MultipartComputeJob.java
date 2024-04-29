@@ -35,7 +35,6 @@ public class MultipartComputeJob implements ComputeJob {
         newOutput.setStatus(this.status);
 
         return newOutput;
-
     }
 
     @Override

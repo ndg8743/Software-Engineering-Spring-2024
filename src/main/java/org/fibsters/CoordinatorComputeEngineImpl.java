@@ -6,21 +6,16 @@ import java.util.Queue;
 
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
-    private FibCalcComputeEngineImpl fibCalcComputeEngine;
-    private FibSpiralComputeEngineImpl fibSpiralComputeEngine;
     private final DataStorageImpl dataStorage;
     private final ComputeJobPoolImpl jobPool;
+    // TODO: still needed?
     private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
 
     private Queue<OutputPayload> outputPayloadQueue; // allowing for async output payloads for when jobPool is busy.
 
     public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage) {
         this.dataStorage = dataStorage;
-        // The rest is very tightly coupled to the implementation of the compute engines.
-        // Not sure if this is the best way to do this.
 
-        //this.fibCalcComputeEngine = new FibCalcComputeEngineImpl(outputPayload);
-        //this.fibSpiralComputeEngine = new FibSpiralComputeEngineImpl(outputPayload);
         this.jobPool = new ComputeJobPoolImpl();
         this.jobPool.start();
     }
@@ -81,9 +76,6 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
         OutputPayloadImpl outputPayload = new OutputPayloadImpl(0, inputPayload, ComputeJobStatus.UNSTARTED);
         MultipartComputeJob computeJob = new MultipartComputeJob(outputPayload);
 
-        // FibCalcBothComputeEngineImpl fibCalcCE = new FibCalcBothComputeEngineImpl(outputPayload);
-        //FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload);
-
         computeJob.setInputPayload(inputPayload);
 
         return computeJob;
@@ -108,8 +100,9 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     public ComputeJobStatus getJobStatusById(String id) {
         return jobPool.getJobById(id).getStatus();
     }
+
     public ComputeJob getJobById(String id) {
-        ComputeJob job = jobPool.getJobById(id);
-        return job;
+        return jobPool.getJobById(id);
     }
+
 }

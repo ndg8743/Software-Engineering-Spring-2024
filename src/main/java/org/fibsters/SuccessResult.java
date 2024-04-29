@@ -1,14 +1,15 @@
 package org.fibsters;
+
 import org.fibsters.interfaces.Result;
-import org.json.JSONObject;
 
 public class SuccessResult<T> implements Result {
 
     private T data;
-    private Boolean success = true;
+    private final boolean success;
 
     public SuccessResult(T data) {
         this.data = data;
+        this.success = true;
     }
 
     @Override

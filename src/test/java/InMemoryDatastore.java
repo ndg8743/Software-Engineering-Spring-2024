@@ -16,14 +16,18 @@ public class InMemoryDatastore {
 
         return properInputPayloadJSON.toString();
     }
+
     public static String getProperInputConfigString(String directive, String customPayloadData) {
         JSONObject properInputPayloadJSON = getProperInputConfig(directive, customPayloadData);
 
         return properInputPayloadJSON.toString();
     }
+
     public static JSONObject getProperInputConfig(String directive, String customPayloadData) {
         JSONObject properInputPayloadJSON = getProperInputConfig(customPayloadData);
+
         properInputPayloadJSON.put("directive", directive);
+
         return properInputPayloadJSON;
     }
 
@@ -32,10 +36,11 @@ public class InMemoryDatastore {
 
         properInputPayloadJSON.put("uniqueID", "1234");
         properInputPayloadJSON.put("inputType", "json");
+
         JSONObject payloadData = !customPayloadData.isEmpty() ? new JSONObject(customPayloadData) : new JSONObject("{'calcFibNumbersUpTo': [6, 7, 8]}");
+
         properInputPayloadJSON.put("payloadData", payloadData);
 
-        //properInputPayloadJSON.put("payloadData", !customPayloadData.isEmpty() ? customPayloadData : "{'calcFibNumbersUpTo': [6, 7, 8]}");
         properInputPayloadJSON.put("delimiter", "");
         properInputPayloadJSON.put("outputType", "json");
         properInputPayloadJSON.put("outputSource", "output.json");
@@ -56,12 +61,15 @@ public class InMemoryDatastore {
 
         return getProperInputConfig(formattedArray);
     }
+
     private static final Gson gson_noBuff = new GsonBuilder()
             .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter(BufferedImageTypeAdapter.ImageType.NULL))
             .create();
+
     private static final Gson gson_buff = new GsonBuilder()
             .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter())
             .create();
+
     public static InputPayloadImpl convertJSONObjToInputPayload(String jsonString) throws JsonSyntaxException {
         return gson_noBuff.fromJson(jsonString, InputPayloadImpl.class);
     }
@@ -70,7 +78,5 @@ public class InMemoryDatastore {
         String jsonString = json.toString();
         return convertJSONObjToInputPayload(jsonString);
     }
-
-
 
 }

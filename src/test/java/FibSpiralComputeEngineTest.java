@@ -4,18 +4,12 @@ import org.fibsters.FibSpiralComputeEngineImpl;
 import org.fibsters.ComputeJobStatus;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class FibSpiralComputeEngineTest {
-
 
     @Test
     public void testFibSpiralComputeEngine() {
@@ -38,7 +32,9 @@ public class FibSpiralComputeEngineTest {
             assert false;
             return;
         }
+
         ArrayList<int[]> fibanswers = new ArrayList<>(3);
+
         fibanswers.add(new int[]{1, 1, 2});
         fibanswers.add(new int[]{1, 1, 2, 3, 5, 8, 13, 21, 34, 55});
         fibanswers.add(new int[]{1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025});
