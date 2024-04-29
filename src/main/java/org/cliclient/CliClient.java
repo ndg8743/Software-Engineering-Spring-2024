@@ -63,7 +63,12 @@ public class CliClient {
             }
 
             System.out.println("Set file name (Don't specify file type!): ");
-            userSpecifiedFileName = scanner.nextLine();
+
+            String inputFileName = scanner.nextLine();
+
+            if (!inputFileName.isBlank() || !inputFileName.isEmpty()) {
+                userSpecifiedFileName = inputFileName;
+            }
 
             while (true) {
                 List<Integer> userInput = getUserInputArr();
@@ -147,7 +152,7 @@ public class CliClient {
                     //String resultJson = "{ \"uniqueID\": \"" + jobId + "\", \"directive\": \"GET_JOB_BY_ID\" }";
                     Result<OutputPayloadImpl> result = getJobById(jobId);
                     handleCompletedResults(result);
-                    System.out.println("Job result: " + result);
+                    System.out.println("Job result: " + result.getData().getStatus().name());
                     break;
                 default:
                     System.out.println("Job not found. Waiting for a few seconds before checking again...");
@@ -172,35 +177,26 @@ public class CliClient {
 
             // Print FibCalcResults
             List<int[]> fibCalcResults = outputPayload.getFibCalcResultsInteger2dList();
+
             for (int[] fibCalcResult : fibCalcResults) {
                 for (int i : fibCalcResult) {
                     System.out.print(i + " ");
-
-                    FibSpiralComputeEngineImpl fibSpiralComputeEngine = new FibSpiralComputeEngineImpl(outputPayload, i, userSpecifiedFileName);
-
-                    fibSpiralComputeEngine.setInputPayload(outputPayload.getInputPayload());
-                    fibSpiralComputeEngine.run();
                 }
+
                 System.out.println();
             }
 
-            // save the buffered image to a file
-/*            if (outputPayload.getOutputImage() != null) {
-                saveImageToFile(outputPayload);
-            }*/
-
+            saveImage(outputPayload.getOutputImage(), "fib_client.png");
         }
     }
 
-    private static void saveImageToFile(OutputPayloadImpl outputPayload) {
-        BufferedImage image = outputPayload.getOutputImage();
-        if (image != null) {
-            System.out.println("Saving the image to a file...");
-            try {
-                ImageIO.write(image, "png", new File(userSpecifiedFileName + ".png"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public static void saveImage(BufferedImage image, String fileName) {
+        try {
+            ImageIO.write(image, "png", new File(fileName));
+
+            System.out.println("Fibonacci fractal image saved as " + fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

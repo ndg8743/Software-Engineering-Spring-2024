@@ -79,11 +79,14 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
     @Override
     public ComputeJob createComputeJobFromInputPayload(InputPayloadImpl inputPayload) {
         OutputPayloadImpl outputPayload = new OutputPayloadImpl(0, inputPayload, ComputeJobStatus.UNSTARTED);
-        FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload);
+        MultipartComputeJob computeJob = new MultipartComputeJob(outputPayload);
 
-        fibCalcCE.setInputPayload(inputPayload);
+        // FibCalcBothComputeEngineImpl fibCalcCE = new FibCalcBothComputeEngineImpl(outputPayload);
+        //FibCalcComputeEngineImpl fibCalcCE = new FibCalcComputeEngineImpl(outputPayload);
 
-        return fibCalcCE;
+        computeJob.setInputPayload(inputPayload);
+
+        return computeJob;
     }
 
     @Override
@@ -106,6 +109,7 @@ public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
         return jobPool.getJobById(id).getStatus();
     }
     public ComputeJob getJobById(String id) {
-        return jobPool.getJobById(id);
+        ComputeJob job = jobPool.getJobById(id);
+        return job;
     }
 }

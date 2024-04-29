@@ -49,6 +49,10 @@ public class OutputPayloadImpl implements OutputPayload {
         return this.uniqueID;
     }
 
+    protected void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
+    }
+
     @Override
     public BufferedImage getOutputImage() {
         return this.fibSpiralResult;
@@ -118,6 +122,18 @@ public class OutputPayloadImpl implements OutputPayload {
 
     public String[] getFileLocations() {
         return this.inputPayload.getPayloadOutputArrayParsed();
+    }
+
+    public OutputPayloadImpl clone() {
+        OutputPayloadImpl outputPayload = new OutputPayloadImpl(this.index, this.inputPayload, this.status);
+
+        outputPayload.setUniqueID(this.uniqueID);
+        outputPayload.setIndex(this.index);
+        outputPayload.fibCalcResults = this.fibCalcResults;
+        outputPayload.fibSpiralResult = this.fibSpiralResult;
+        outputPayload.fibCalcStrings = this.fibCalcStrings;
+
+        return outputPayload;
     }
 
 }

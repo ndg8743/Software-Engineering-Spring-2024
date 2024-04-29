@@ -88,6 +88,44 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
     // process jobs one at a time in queue, using all available threads per job
     private void processJob(ComputeJob job) {
+        // check if job is multipart
+        if (job instanceof MultipartComputeJob && job.getStatus() != ComputeJobStatus.COMPLETED) {
+            MultipartComputeJob multiJob = (MultipartComputeJob) job;
+
+            // if it is, split the job into multiple subjobs
+            if (multiJob.getFibCalcCE().getStatus() == ComputeJobStatus.COMPLETED) {
+                if (multiJob.isSpiralFinished()) {
+                    multiJob.getFibSpiralCE().saveBuffer();
+
+                    multiJob.setStatus(ComputeJobStatus.COMPLETED);
+                    return;
+                } else {
+                    if (multiJob.getFibSpiralCE().getStatus() == ComputeJobStatus.UNSTARTED) {
+                        multiJob.getFibSpiralCE().setStatus(ComputeJobStatus.PENDING);
+
+                        //this.jobs.add(multiJob.getFibSpiralCE());
+                        this.currentJob = multiJob.getFibSpiralCE();
+
+                        // set currentJob to multiJob.getFibSpiralCE()
+                        // add multijob back to queue, so next job will be spiral
+                        this.jobs.add(multiJob);
+                    }
+                }
+            } else {
+                multiJob.getFibCalcCE().setStatus(ComputeJobStatus.PENDING);
+
+                this.currentJob = multiJob.getFibCalcCE();
+
+                // set currentJob to multiJob.getFibSpiralCE()
+                // add multijob back to queue, so next job will be spiral
+                this.jobs.add(multiJob);
+            }
+
+            multiJob.setStatus(ComputeJobStatus.PENDING);
+
+            job = this.currentJob;
+        }
+
         job.setStatus(ComputeJobStatus.RUNNING);
 
         int numThreads = getMaxNumThreads();
@@ -96,33 +134,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         int totalJobSize = job.getTotalSize(); // if [1, 10, 25] then 36
         int[] subJobs = job.getInputPayload().getPayloadDataParsed(); // ex [1, 10, 25]
 
-        int[] threadsPerSubjob = new int[subJobs.length];
-
-        int biggestSubJob = 0;
-        int biggestSubJobIndex = 0;
-        int sanityCheckCount = 0;
-
-        for (int i = 0; i < subJobs.length; i++) {
-            int threadNum = Math.max(1, Math.round(((float) subJobs[i] / totalJobSize) * numThreads));
-
-            if (threadNum > biggestSubJob) {
-                biggestSubJob = threadNum;
-                biggestSubJobIndex = i;
-            }
-
-            sanityCheckCount += threadNum;
-            threadsPerSubjob[i] = threadNum;
-        }
-
-        if (sanityCheckCount < numThreads) {
-            int diff = Math.abs(numThreads - sanityCheckCount);
-
-            threadsPerSubjob[0] += diff; // add the difference to the first subjob
-        } else if (sanityCheckCount > numThreads) {
-            int diff = Math.abs(numThreads - sanityCheckCount);
-
-            threadsPerSubjob[biggestSubJobIndex] -= diff; // subtract the difference from the biggest subjob
-        }
+        int[] threadsPerSubjob = this.handleThreadPooling(subJobs, numThreads);
 
         int threadCount = 0;
 
@@ -164,6 +176,49 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             futureFibTasks[i] = executor.submit(job);
         }*/
         //executor.execute(job);
+    }
+
+    private int[] handleThreadPooling(int[] jobs, int numThreads) {
+        int n = jobs.length;
+        double totalJobs = Arrays.stream(jobs).sum();
+        double[] proportions = Arrays.stream(jobs).asDoubleStream().map(job -> job / totalJobs).toArray();
+        int[] distributedThreads = new int[n];
+        Arrays.fill(distributedThreads, 1); // Start each job with one thread
+
+        // Adjust total number of threads available for proportional distribution
+        int availableThreads = numThreads - n;
+
+        // Calculate proportional distribution of the remaining threads
+        int[] additionalThreads = Arrays.stream(proportions).mapToInt(prop -> (int) (availableThreads * prop)).toArray();
+
+        // Adjust for rounding errors in additional threads distribution
+        int distributedSum = Arrays.stream(additionalThreads).sum();
+        int difference = availableThreads - distributedSum;
+
+        // Add additional threads to the distributedThreads
+        for (int i = 0; i < n; i++) {
+            distributedThreads[i] += additionalThreads[i];
+        }
+
+        // Distribute the remaining threads based on the largest residuals
+        double[] residuals = new double[n];
+        for (int i = 0; i < n; i++) {
+            residuals[i] = availableThreads * proportions[i] - additionalThreads[i];
+        }
+
+        while (difference > 0) {
+            int maxIndex = 0;
+            for (int i = 1; i < residuals.length; i++) {
+                if (residuals[i] > residuals[maxIndex]) {
+                    maxIndex = i;
+                }
+            }
+            distributedThreads[maxIndex]++;
+            residuals[maxIndex] = 0; // Reset the max residual to prevent repeated increment
+            difference--;
+        }
+
+        return distributedThreads;
     }
 
     private void processAllJobs() {
@@ -215,6 +270,12 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     }
 
     public ComputeJob getJobById(String id) {
+        ComputeJob multiPartJob = isMultiPartComputeJob(id);
+
+        if (multiPartJob != null) {
+            return multiPartJob;
+        }
+
         if (currentJob != null && Objects.equals(currentJob.getOutputPayload().getUniqueID(), id)) {
             return currentJob;
         }
@@ -233,4 +294,21 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
         return null;
     }
+
+    public ComputeJob isMultiPartComputeJob(String id) {
+        for (ComputeJob job : jobs) {
+            if (job instanceof MultipartComputeJob && Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
+                return job;
+            }
+        }
+
+        for (ComputeJob job : finishedJobs) {
+            if (job instanceof MultipartComputeJob && Objects.equals(job.getOutputPayload().getUniqueID(), id)) {
+                return job;
+            }
+        }
+
+        return null;
+    }
+
 }
