@@ -221,7 +221,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         String debugMessage = "[Fib] (Draw) - ";
 
-        //System.out.println(debugMessage + " start angle: " + angle);
+        System.out.println(debugMessage + " start angle: " + angle);
 
         synchronized (image) {
             // draw a dot at the center of the image
@@ -234,28 +234,28 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
                 graphics.setColor(Color.GRAY);
 
-                //System.out.println(debugMessage + " <gray> " + "arcX: " + arcX + ", arcY: " + arcY);
+                System.out.println(debugMessage + " <gray> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 90) {
                 arcX = posX;
                 arcY = posY;
 
                 graphics.setColor(Color.WHITE);
 
-                //System.out.println(debugMessage + " <white> " + "arcX: " + arcX + ", arcY: " + arcY);
+                System.out.println(debugMessage + " <white> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 180) {
                 arcX = posX;
                 arcY = posY - scaledFib;
 
                 graphics.setColor(Color.ORANGE);
 
-                //System.out.println(debugMessage + " <orange> " + "arcX: " + arcX + ", arcY: " + arcY);
+                System.out.println(debugMessage + " <orange> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 270) {
                 arcX = posX - scaledFib;
                 arcY = posY - scaledFib;
 
                 graphics.setColor(Color.GREEN);
 
-                //System.out.println(debugMessage + " <green> " + "arcX: " + arcX + ", arcY: " + arcY);
+                System.out.println(debugMessage + " <green> " + "arcX: " + arcX + ", arcY: " + arcY);
             }
 
             Shape shape = new BigIntRectangle(BigIntUtil.toBigInt(posX), BigIntUtil.toBigInt(posY), BigIntUtil.toBigInt(scaledFib), BigIntUtil.toBigInt(scaledFib));
@@ -271,15 +271,19 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
         }
 
         graphics.dispose();
+    }
+
+    public void saveBuffer() {
+        BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
 
         if (this.fileName.isEmpty()) {
-            this.fileName = this.outputPayload.getFileLocations()[this.chunk];
+            this.fileName = "fib" + this.chunk;
         }
 
         saveImage(image, fileName + ".png");
     }
 
-    private void saveImage(BufferedImage image, String fileName) {
+    public void saveImage(BufferedImage image, String fileName) {
         try {
             ImageIO.write(image, "png", new File(fileName));
 
