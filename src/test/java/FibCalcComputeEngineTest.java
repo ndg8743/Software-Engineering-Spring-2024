@@ -17,6 +17,7 @@ public class FibCalcComputeEngineTest {
         InputPayloadImpl inputPayload = Mockito.mock(InputPayloadImpl.class);
         OutputPayloadImpl outputPayload = Mockito.mock(OutputPayloadImpl.class);
         FibCalcComputeEngineImpl fibCalcCEMock = new FibCalcComputeEngineImpl(outputPayload);
+
         fibCalcCEMock.setInputPayload(inputPayload);
 
         ComputeJobStatus status = fibCalcCEMock.getStatus();

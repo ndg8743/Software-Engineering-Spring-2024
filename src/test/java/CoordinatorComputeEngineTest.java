@@ -2,7 +2,6 @@ import org.fibsters.CoordinatorComputeEngineImpl;
 import org.fibsters.DataStorageImpl;
 import org.fibsters.InputPayloadImpl;
 import org.fibsters.interfaces.ComputeJob;
-import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
 import org.fibsters.ComputeJobStatus;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CoordinatorComputeEngineTest {
+
     @Test
     public void testCompute() {
         System.out.println("CoordinatorComputeEngineTest");

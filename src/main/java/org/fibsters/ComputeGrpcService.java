@@ -47,7 +47,7 @@ public class ComputeGrpcService extends ComputeInputServiceImplBase {
     }
 
     private String processInputStringForOutput(String inputString) {
-        String response = this.api.processInputStringForOutput(inputString);
-        return response;
+        return this.api.processInputStringForOutput(inputString);
     }
+
 }

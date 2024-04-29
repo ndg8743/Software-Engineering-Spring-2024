@@ -89,9 +89,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     // process jobs one at a time in queue, using all available threads per job
     private void processJob(ComputeJob job) {
         // check if job is multipart
-        if (job instanceof MultipartComputeJob && job.getStatus() != ComputeJobStatus.COMPLETED) {
-            MultipartComputeJob multiJob = (MultipartComputeJob) job;
-
+        if (job instanceof MultipartComputeJob multiJob && job.getStatus() != ComputeJobStatus.COMPLETED) {
             // if it is, split the job into multiple subjobs
             if (multiJob.getFibCalcCE().getStatus() == ComputeJobStatus.COMPLETED) {
                 if (multiJob.isSpiralFinished()) {
@@ -103,10 +101,8 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                     if (multiJob.getFibSpiralCE().getStatus() == ComputeJobStatus.UNSTARTED) {
                         multiJob.getFibSpiralCE().setStatus(ComputeJobStatus.PENDING);
 
-                        //this.jobs.add(multiJob.getFibSpiralCE());
                         this.currentJob = multiJob.getFibSpiralCE();
 
-                        // set currentJob to multiJob.getFibSpiralCE()
                         // add multijob back to queue, so next job will be spiral
                         this.jobs.add(multiJob);
                     }
@@ -116,7 +112,6 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
                 this.currentJob = multiJob.getFibCalcCE();
 
-                // set currentJob to multiJob.getFibSpiralCE()
                 // add multijob back to queue, so next job will be spiral
                 this.jobs.add(multiJob);
             }
@@ -130,8 +125,6 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
         int numThreads = getMaxNumThreads();
 
-        //int threadGroupSize = Math.round(job.getTotalSize() / numThreads);
-        int totalJobSize = job.getTotalSize(); // if [1, 10, 25] then 36
         int[] subJobs = job.getInputPayload().getPayloadDataParsed(); // ex [1, 10, 25]
 
         int[] threadsPerSubjob = this.handleThreadPooling(subJobs, numThreads);
@@ -142,7 +135,6 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
             int threadGroupSize = subJobs[i] / threadsPerSubjob[i];
 
             for (int j = 0; j < threadsPerSubjob[i]; j++) {
-                //System.out.println("Subjob " + i + " has " + threadsPerSubjob[i] + " threads");
                 int start = j * threadGroupSize;
                 int end = (j + 1) * threadGroupSize;
 
@@ -202,17 +194,20 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
 
         // Distribute the remaining threads based on the largest residuals
         double[] residuals = new double[n];
+
         for (int i = 0; i < n; i++) {
             residuals[i] = availableThreads * proportions[i] - additionalThreads[i];
         }
 
         while (difference > 0) {
             int maxIndex = 0;
+
             for (int i = 1; i < residuals.length; i++) {
                 if (residuals[i] > residuals[maxIndex]) {
                     maxIndex = i;
                 }
             }
+
             distributedThreads[maxIndex]++;
             residuals[maxIndex] = 0; // Reset the max residual to prevent repeated increment
             difference--;

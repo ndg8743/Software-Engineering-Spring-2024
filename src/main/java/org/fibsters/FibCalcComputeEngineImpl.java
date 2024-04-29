@@ -6,7 +6,6 @@ import org.fibsters.interfaces.InputPayload;
 public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
 
     private static final double GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // Phi
-    private int[] fibonacci;
     private ComputeJobStatus status;
     private int startIndex;
     private int endIndex;
@@ -99,16 +98,19 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
         // TODO: Do proper chunking and offsetting, need to hold off on implementation for now
 
         status = ComputeJobStatus.PENDING;
+
         int total = endIndex - startIndex;
+
         if (total < 0) {
             throw new IllegalArgumentException("startIndex must be less than or equal to endIndex");
         }
 
-        fibonacci = new int[total];
+        int[] fibonacci = new int[total];
 
         if (total > 0) {
             fibonacci[0] = calculateNthFibonacci(startIndex);
         }
+
         if (total > 1) {
             fibonacci[1] = calculateNthFibonacci(startIndex + 1);
 
@@ -118,9 +120,8 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
             }
         }
 
-        //outputPayload = new OutputPayloadImpl(startIndex, inputPayload, ComputeJobStatus.COMPLETED);
         outputPayload.setFibCalcResults(this.chunk, fibonacci, startIndex, endIndex);
-        //System.out.println(this.chunk + " FibCalcComputeEngineImpl.run() completed " + startIndex + " " + endIndex);
+
         status = ComputeJobStatus.COMPLETED;
     }
 

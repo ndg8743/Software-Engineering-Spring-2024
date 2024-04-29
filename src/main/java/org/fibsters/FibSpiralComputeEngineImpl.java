@@ -6,7 +6,6 @@ import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.util.BigIntUtil;
 import org.legacy.BigIntRectangle;
-import org.legacy.FibonacciFractalGenerator;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -47,26 +46,8 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
         this.chunk = chunk;
         this.fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
         this.endIndex = this.fibonacci.length - 1;
-
         this.maxElement = this.fibonacci.length;
-
-
     }
-
-    public FibSpiralComputeEngineImpl(OutputPayloadImpl outputPayload, int chunk, String fileName) {
-        this.status = ComputeJobStatus.UNSTARTED;
-        this.startIndex = 0;
-
-        this.outputPayload = outputPayload;
-        this.chunk = chunk;
-        this.fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
-        this.endIndex = this.fibonacci.length - 1;
-
-        this.maxElement = this.fibonacci.length;
-
-        this.fileName = fileName;
-    }
-
 
     @Override
     public void setInputPayload(InputPayload inputPayload) {

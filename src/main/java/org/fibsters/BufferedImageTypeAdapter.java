@@ -14,8 +14,10 @@ import java.util.Base64;
 public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
 
     public enum ImageType {
+
         PNG,
         NULL
+
     }
 
     ImageType imageType;
