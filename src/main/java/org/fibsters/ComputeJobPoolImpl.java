@@ -179,21 +179,33 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
     }
 
     private int[] handleThreadPooling(int[] jobs, int numThreads) {
+        int n = jobs.length;
         double totalJobs = Arrays.stream(jobs).sum();
         double[] proportions = Arrays.stream(jobs).asDoubleStream().map(job -> job / totalJobs).toArray();
-        int[] distributedThreads = Arrays.stream(proportions).mapToInt(prop -> (int) (numThreads * prop)).toArray();
+        int[] distributedThreads = new int[n];
+        Arrays.fill(distributedThreads, 1); // Start each job with one thread
 
-        // Adjust for rounding errors
-        int distributedSum = Arrays.stream(distributedThreads).sum();
-        int difference = numThreads - distributedSum;
+        // Adjust total number of threads available for proportional distribution
+        int availableThreads = numThreads - n;
 
-        // Create array for residuals and their indices
-        double[] residuals = new double[jobs.length];
-        for (int i = 0; i < jobs.length; i++) {
-            residuals[i] = numThreads * proportions[i] - distributedThreads[i];
+        // Calculate proportional distribution of the remaining threads
+        int[] additionalThreads = Arrays.stream(proportions).mapToInt(prop -> (int) (availableThreads * prop)).toArray();
+
+        // Adjust for rounding errors in additional threads distribution
+        int distributedSum = Arrays.stream(additionalThreads).sum();
+        int difference = availableThreads - distributedSum;
+
+        // Add additional threads to the distributedThreads
+        for (int i = 0; i < n; i++) {
+            distributedThreads[i] += additionalThreads[i];
         }
 
         // Distribute the remaining threads based on the largest residuals
+        double[] residuals = new double[n];
+        for (int i = 0; i < n; i++) {
+            residuals[i] = availableThreads * proportions[i] - additionalThreads[i];
+        }
+
         while (difference > 0) {
             int maxIndex = 0;
             for (int i = 1; i < residuals.length; i++) {
