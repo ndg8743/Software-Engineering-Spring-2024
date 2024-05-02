@@ -120,8 +120,6 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     @Override
     public void run() {
-
-
         this.status = ComputeJobStatus.RUNNING;
         this.generateValues();
 
@@ -136,7 +134,6 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         int x = 0;
         int y = 0;
-        //int angle = 0;
         int largestFib = fibonacci[maxElement - 1];
         int largestFib2 = fibonacci[maxElement - 2];
         double scale = 1.0 * WIDTH / (largestFib2 + largestFib);

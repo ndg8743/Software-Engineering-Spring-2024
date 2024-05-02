@@ -96,6 +96,8 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                     multiJob.getFibSpiralCE().saveBuffer();
 
                     multiJob.setStatus(ComputeJobStatus.COMPLETED);
+
+                    this.currentJob = null;
                     return;
                 } else {
                     if (multiJob.getFibSpiralCE().getStatus() == ComputeJobStatus.UNSTARTED) {
