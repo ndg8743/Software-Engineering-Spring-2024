@@ -3,6 +3,10 @@ package org.fibsters;
 import org.fibsters.interfaces.FibCalcComputeEngine;
 import org.fibsters.interfaces.InputPayload;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
 
     private static final double GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2; // Phi
@@ -12,12 +16,15 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     private InputPayload inputPayload; // used for reference potentially(has uuid)
     private int chunk;
     private OutputPayloadImpl outputPayload;
+    private static Map<Integer, Integer> memoizationMap; // cache
 
     public FibCalcComputeEngineImpl(OutputPayloadImpl outputPayload) {
         this.status = ComputeJobStatus.UNSTARTED;
         this.startIndex = 0;
         this.endIndex = 10;
         this.outputPayload = outputPayload;
+
+        memoizationMap = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -112,12 +119,28 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
         }
 
         if (total > 1) {
-            fibonacci[1] = calculateNthFibonacci(startIndex + 1);
+            //1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229
+            Map<Integer, Integer> memoizationMap = new HashMap<>();
+
+            // Store the first two Fibonacci numbers directly
+            memoizationMap.put(0, calculateNthFibonacci(startIndex));
+            memoizationMap.put(1, calculateNthFibonacci(startIndex + 1));
+
+            for (int i = 2; i < total; i++) {
+                int next = memoizationMap.get(i - 1) + memoizationMap.get(i - 2);
+                memoizationMap.put(i, next);
+            }
+
+            // Fill the fibonacci array
+            for (int i = 0; i < total; i++) {
+                fibonacci[i] = memoizationMap.get(i);
+            }
+/*            fibonacci[1] = calculateNthFibonacci(startIndex + 1);
 
             for (int i = startIndex + 2; i < endIndex; i++) {
                 fibonacci[i - startIndex] = fibonacci[i - 1 - startIndex] + fibonacci[i - 2 - startIndex];
                 //System.err.println(fibonacci[i-startIndex]);
-            }
+            }*/
         }
 
         outputPayload.setFibCalcResults(this.chunk, fibonacci, startIndex, endIndex);
