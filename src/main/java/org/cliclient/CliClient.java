@@ -52,10 +52,11 @@ public class CliClient {
     // TODO: this is very hacky, properly handle this later!
     private static String userSpecifiedFileName = "fib_client";
 
-    public static void setNetworkRequestType(String type){
+    public static void setNetworkRequestType(String type) {
         if ("GRPC".equalsIgnoreCase(type)) {
             CliClient.networkRequestType = type;
-        } else if("POST".equalsIgnoreCase(type)) {
+        }
+        else if("POST".equalsIgnoreCase(type)) {
             CliClient.networkRequestType = type;
         }
     }

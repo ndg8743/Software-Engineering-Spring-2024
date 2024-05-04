@@ -59,8 +59,8 @@ public class ServerIntegrationTest {
         assertTrue(duration.toMillis() < 10000);
     }
 
-    void testServerWithInput(int[] userinputArr, String RequestType){
-        CliClient.setNetworkRequestType(RequestType);
+    void testServerWithInput(int[] userinputArr, String requestType) {
+        CliClient.setNetworkRequestType(requestType);
         String startJobJson = CliClient.createStartJobFromInput(userinputArr);
         String jobId = CliClient.startComputeJob(startJobJson);
 
