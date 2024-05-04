@@ -52,6 +52,14 @@ public class CliClient {
     // TODO: this is very hacky, properly handle this later!
     private static String userSpecifiedFileName = "fib_client";
 
+    public static void setNetworkRequestType(String type){
+        if ("GRPC".equalsIgnoreCase(type)) {
+            CliClient.networkRequestType = type;
+        } else if("POST".equalsIgnoreCase(type)) {
+            CliClient.networkRequestType = type;
+        }
+    }
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Starting the compute job client...");
@@ -131,7 +139,7 @@ public class CliClient {
         }
     }
 
-    private static void doJob(String jobId) {
+    public static void doJob(String jobId) {
         boolean completed = false;
         while (!completed) {
             System.out.println("Checking job status for ID: " + jobId);
@@ -242,7 +250,7 @@ public class CliClient {
         return startJobJson;
     }
 
-    private static String startComputeJob(String json) {
+    public static String startComputeJob(String json) {
         String response = sendNetworkRequest(json); //sendNetworkRequest(networkRequestType, json);
 
         if (response != null) {
@@ -301,7 +309,7 @@ public class CliClient {
         };
     }
 
-    private static String sendGrpcRequest(String json) {
+    public static String sendGrpcRequest(String json) {
         //System.out.println("[Fib] (Test2) - Test compute engine from client with grpc...");
         // Starting compute job with initial JSON
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8999).usePlaintext().build();
@@ -326,7 +334,7 @@ public class CliClient {
         return jsonResponse;
     }
 
-    private static String sendPostRequest(String json) {
+    public static String sendPostRequest(String json) {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost("http://localhost:8080/fib");
             StringEntity entity = new StringEntity(json);
