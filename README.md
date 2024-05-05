@@ -60,3 +60,31 @@ This project is a web application that will generate a fractal image based on th
 
 ## Prototype Code
 [Click to view](/src/main/java/org/legacy/) Written without full api implementation. This is a quick and dirty demonstration of what the code should look like.
+
+
+# Benchmark Testing and Optimization
+
+## Optimization
+1. **Initial Issues:**
+   - Inefficient memory allocation caused memory exhaustion and prolonged execution times exceeding 20+ minutes.
+  
+2. **Memory Optimization with HashMap:**
+   - Implemented a caching mechanism using a HashMap to optimize the computation algorithm.
+   - Stored previously calculated Fibonacci values in the HashMap for reuse, reducing the memory footprint and improving efficiency.
+  
+3. **Impact of Optimization:**
+   - Memory usage became more efficient, preventing memory exhaustion issues post-optimization.
+   - Computation time was drastically reduced, ensuring computations were completed within a reasonable timeframe.
+  
+4. **Benchmark Results:**
+   - Reran integration tests to evaluate performance improvements.
+   - Optimized compute engine showcased significantly faster execution times and stable memory usage compared to the initial implementation.
+   - Integration tests validated that requests were processed within an acceptable duration, meeting performance requirements.
+
+## Benchmark Results
+
+### Before
+![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/23577acc-1ef1-4829-ace7-06105a938998)
+
+### After
+![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/e258108a-ef9e-4ed4-a88b-629aba15e762)
