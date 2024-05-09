@@ -25,7 +25,7 @@ public interface OutputPayload {
 
     String getUniqueID();
 
-    BufferedImage getOutputImage();
+    BufferedImage getOutputImage(int chunk);
 
     Object toJSON();
 

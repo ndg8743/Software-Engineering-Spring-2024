@@ -14,6 +14,7 @@ import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
@@ -191,7 +192,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     private void draw() {
-        BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
+        BufferedImage image = this.outputPayload.getOutputImage(this.chunk); //image to write to
         //TODO: do the writing that's in the legacy class
 
         Graphics2D graphics = (Graphics2D) image.getGraphics();
@@ -252,13 +253,13 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     public void saveBuffer() {
-        BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
+        for (int i = 0; i < this.outputPayload.getFibCalcResultsInteger2dList().size(); i++) {
+            BufferedImage image = this.outputPayload.getOutputImage(i); //image to write to
 
-        if (this.fileName.isEmpty()) {
-            this.fileName = "fib" + this.chunk;
+            this.fileName = "fib" + i;
+
+            saveImage(image, fileName + ".png");
         }
-
-        saveImage(image, fileName + ".png");
     }
 
     public void saveImage(BufferedImage image, String fileName) {

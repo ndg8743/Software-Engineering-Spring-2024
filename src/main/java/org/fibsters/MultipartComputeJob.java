@@ -48,8 +48,8 @@ public class MultipartComputeJob implements ComputeJob {
     }
 
     @Override
-    public int getTotalSize() {
-        return this.fibCalcCE.getTotalSize();
+    public int getTotalSize(int chunk) {
+        return this.fibCalcCE.getTotalSize(chunk);
     }
 
     @Override

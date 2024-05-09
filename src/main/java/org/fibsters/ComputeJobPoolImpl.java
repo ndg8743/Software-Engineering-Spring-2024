@@ -153,9 +153,7 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                 futureFibTasks[threadCount++] = executor.submit(jobClone);
             }
         }
-
         System.out.println("Thread count: " + threadCount);
-
         /*int threadGroupSize = Math.round(job.getTotalSize() / numThreads); // 90 fib numbers / 4 threads = 22.5
         for (int i = numThreads; i >= 0; i--) {
             int start = i * threadGroupSize;
