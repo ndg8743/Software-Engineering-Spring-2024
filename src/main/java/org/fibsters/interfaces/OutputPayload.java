@@ -23,6 +23,10 @@ public interface OutputPayload {
 
     void setFibCalcResults(int chunk, int[] fibCalcSubResults, int startIndex, int endIndex);
 
+    String getUniqueID();
+
     BufferedImage getOutputImage();
+
+    Object toJSON();
 
 }

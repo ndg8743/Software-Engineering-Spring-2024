@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+import "InputPayloadRequest.proto";
+import "InputPayloadResponse.proto";
+
+service InputPayloadService {
+
+  rpc ParseMessage (InputPayloadRequest) returns (InputPayloadResponse) {}
+
+}

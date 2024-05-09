@@ -2,6 +2,7 @@ import org.fibsters.ComputeJobStatus;
 import org.fibsters.FibCalcComputeEngineImpl;
 import org.fibsters.InputPayloadImpl;
 import org.fibsters.OutputPayloadImpl;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -16,6 +17,7 @@ public class FibCalcComputeEngineTest {
         InputPayloadImpl inputPayload = Mockito.mock(InputPayloadImpl.class);
         OutputPayloadImpl outputPayload = Mockito.mock(OutputPayloadImpl.class);
         FibCalcComputeEngineImpl fibCalcCEMock = new FibCalcComputeEngineImpl(outputPayload);
+
         fibCalcCEMock.setInputPayload(inputPayload);
 
         ComputeJobStatus status = fibCalcCEMock.getStatus();
@@ -36,7 +38,9 @@ public class FibCalcComputeEngineTest {
         Collections.addAll(list, 1, 10, 25);
 
         try {
-            inputPayload2 = new InputPayloadImpl(InMemoryDatastore.getProperInputConfig(list)); // "{'CalcFibNumbersUpTo': [1, 10, 25]}"
+            inputPayload2 = InMemoryDatastore.convertJSONObjToInputPayload(InMemoryDatastore.getProperInputConfig(list));
+
+            //inputPayload2 = new InputPayloadImpl(); // "{'calcFibNumbersUpTo': [1, 10, 25]}"
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

@@ -1,66 +1,82 @@
 package org.fibsters;
 
+import com.google.gson.Gson;
 import org.fibsters.interfaces.InputPayload;
-import org.json.JSONObject;
 
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.List;
 
 public class InputPayloadImpl implements InputPayload {
 
     private String uniqueID;
+
+    public enum DirectiveType {
+        GET_JOB_STATUS_BY_ID,
+        GET_JOB_BY_ID,
+        SUBMIT_COMPUTE_JOB
+    }
+
+    private DirectiveType directive;
     private String inputType;
     private String delimiter;
-    private JSONObject payloadDataJSON;
+    private PayloadDataImpl payloadData;
     private String outputType;
     private String outputSource;
-    private int[] payloadDataParsed;
-    private String[] payloadOutputArrayParsed;
 
     /**
-     * Constructor for InputPayloadImpl
+     * Static factory method to create an instance of InputPayloadImpl from a JSON string.
      *
-     * @param inputConfig
-     * @throws Exception
+     * @param inputString The JSON string to parse.
+     * @return An instance of InputPayloadImpl.
+     * @throws Exception If there is an error during parsing or validation.
      */
-    /*
-    Example correct JSON input:
-    {
-        "uniqueID": "1234",
-        "inputType": "json",
-        "delimiter": ",",
-        "outputType": "json",
-        "outputSource": "output.json"
+    public static InputPayloadImpl createInputPayloadFromString(String inputString) throws Exception {
+        Gson gson = new Gson();
+
+        InputPayloadImpl inputPayload = gson.fromJson(inputString, InputPayloadImpl.class);
+
+        inputPayload.postDeserialize();
+
+        return inputPayload;
     }
-     */
-    public InputPayloadImpl(JSONObject inputConfig) throws Exception {
-        try { // Attempts to convert the JSON object to a valid input payload
-            this.uniqueID = inputConfig.getString("uniqueID");
-            this.inputType = inputConfig.getString("inputType");
-            this.delimiter = inputConfig.getString("delimiter");
-            this.outputType = inputConfig.getString("outputType");
-            this.outputSource = inputConfig.getString("outputSource");
 
-            if (Objects.equals(this.inputType, "json")) {
-                String payloadDataString = inputConfig.getString("payloadData");
-                this.payloadDataJSON = new JSONObject(payloadDataString);
-                this.payloadDataParsed = new int[this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length()];
-
-                for (int i = 0; i < this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").length(); i++) {
-                    this.payloadDataParsed[i] = this.payloadDataJSON.getJSONArray("CalcFibNumbersUpTo").getInt(i);
+    @Override
+    public void postDeserialize() throws Exception {
+        switch (this.directive) {
+            case GET_JOB_STATUS_BY_ID:
+                if (this.uniqueID == null) {
+                    throw new Exception("Error: Must have a uniqueID");
                 }
 
-                if (this.payloadDataJSON.has("outputLocations")) {
-                    this.payloadOutputArrayParsed = new String[this.payloadDataJSON.getJSONArray("outputLocations").length()];
-
-                    for (int i = 0; i < this.payloadDataJSON.getJSONArray("outputLocations").length(); i++) {
-                        this.payloadOutputArrayParsed[i] = this.payloadDataJSON.getJSONArray("outputLocations").getString(i);
-                    }
+                break;
+            case GET_JOB_BY_ID:
+                if (this.uniqueID == null) {
+                    throw new Exception("Error: Must have a uniqueID");
                 }
 
-            }
-        } catch (Exception e) {
-            throw new Exception("Error: " + e.getMessage());
+                break;
+            case SUBMIT_COMPUTE_JOB:
+                if (this.payloadData == null) {
+                    throw new Exception("Error: Must have payloadData with calcFibNumbersUpTo inside it");
+                }
+
+                if (this.payloadData.calcFibNumbersUpTo == null) {
+                    throw new Exception("Error: Must have calcFibNumbersUpTo");
+                }
+
+                break;
+            default:
+                throw new Exception("Error: Must be valid directive type" + getListOfDirectiveTypesAsStringLol());
         }
+    }
+
+    private String getListOfDirectiveTypesAsStringLol() {
+        List<DirectiveType> directiveTypes = Arrays.asList(InputPayloadImpl.DirectiveType.values());
+        List<String> directiveTypeNames = directiveTypes.stream()
+                .map(Enum::name)
+                .toList();
+
+        return directiveTypeNames.toString();
     }
 
     @Override
@@ -78,8 +94,13 @@ public class InputPayloadImpl implements InputPayload {
     @Override
     public int getTotalSize() {
         // TODO: Make this consider the input type
-        return this.payloadDataParsed.length;
-        // Have to calcuate based on if it's csv or json, what fields ect
+        // Have to calculate based on if it's csv or json, what fields ect
+        return this.payloadData.calcFibNumbersUpTo.length;
+    }
+
+    @Override
+    public DirectiveType getDirective() {
+        return this.directive;
     }
 
     @Override
@@ -88,13 +109,13 @@ public class InputPayloadImpl implements InputPayload {
     }
 
     @Override
-    public JSONObject getPayloadData() {
-        return this.payloadDataJSON;
+    public PayloadDataImpl getPayloadData() {
+        return this.payloadData;
     }
 
     @Override
     public int[] getPayloadDataParsed() {
-        return payloadDataParsed;
+        return payloadData.calcFibNumbersUpTo;
     }
 
     @Override
@@ -103,23 +124,13 @@ public class InputPayloadImpl implements InputPayload {
     }
 
     @Override
-    public String getOutputData() {
-        return null;
-    }
-
-    @Override
     public String getOutputSource() {
         return this.outputSource;
     }
 
     @Override
-    public void printPayload() {
-
-    }
-
-    @Override
     public String[] getPayloadOutputArrayParsed() {
-        return payloadOutputArrayParsed;
+        return payloadData.outputLocations;
     }
 
 }

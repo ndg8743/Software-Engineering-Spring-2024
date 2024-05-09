@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package org.fibsters;
+
+import "ComputeInputMessage.proto";
+import "Result.proto";
+
+message ComputeInputResponse {
+
+  Result result = 1;
+  ComputeInputMessage output = 2;
+
+}

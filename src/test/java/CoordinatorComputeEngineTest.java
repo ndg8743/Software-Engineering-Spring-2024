@@ -1,7 +1,7 @@
 import org.fibsters.CoordinatorComputeEngineImpl;
 import org.fibsters.DataStorageImpl;
+import org.fibsters.InputPayloadImpl;
 import org.fibsters.interfaces.ComputeJob;
-import org.fibsters.interfaces.InputPayload;
 import org.fibsters.interfaces.OutputPayload;
 import org.fibsters.interfaces.Result;
 import org.fibsters.ComputeJobStatus;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CoordinatorComputeEngineTest {
+
     @Test
     public void testCompute() {
         System.out.println("CoordinatorComputeEngineTest");
@@ -21,11 +22,11 @@ public class CoordinatorComputeEngineTest {
         DataStorageImpl dataStorage = new DataStorageImpl();
         CoordinatorComputeEngineImpl computeAPI = new CoordinatorComputeEngineImpl(dataStorage);
 
-        String inputString = InMemoryDatastore.getProperInputConfigString("{'CalcFibNumbersUpTo': [1, 10, 25]}");
+        String inputString = InMemoryDatastore.getProperInputConfigString("SUBMIT_COMPUTE_JOB","{'calcFibNumbersUpTo': [1, 10, 25]}");
 
         System.out.println(inputString);
 
-        Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
+        Result<InputPayloadImpl> result = computeAPI.parseInputPayload(inputString);
 
         assert result.isSuccess();
         assert result.getData().getInputType().equals("json");
@@ -76,11 +77,11 @@ public class CoordinatorComputeEngineTest {
     public void testComputeOld() {
         CoordinatorComputeEngineImpl computeAPI = Mockito.mock(CoordinatorComputeEngineImpl.class);
 
-        String inputString = InMemoryDatastore.getProperInputConfigString("{'CalcFibNumbersUpTo': [1, 10, 25]}");
+        String inputString = InMemoryDatastore.getProperInputConfigString("{'calcFibNumbersUpTo': [1, 10, 25]}");
 
         System.out.println(inputString);
 
-        Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
+        Result<InputPayloadImpl> result = computeAPI.parseInputPayload(inputString);
 
         assert result.isSuccess();
         assert result.getData().getInputType().equals("json");

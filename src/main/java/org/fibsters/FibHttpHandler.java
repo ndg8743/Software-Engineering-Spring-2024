@@ -1,15 +1,15 @@
 package org.fibsters;
 
+import org.fibsters.ComputeInputServiceGrpc.ComputeInputServiceImplBase;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.fibsters.interfaces.InputPayload;
-import org.fibsters.interfaces.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class FibHttpHandler implements HttpHandler {
+public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpHandler {
 
     private final CoordinatorComputeEngineImpl computeAPI;
 
@@ -36,6 +36,9 @@ public class FibHttpHandler implements HttpHandler {
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
         String response = "get: hello world from fib handler";
+        //String exampleJson = "{'calcFibNumbersUpTo': [1, 10, 25]}";
+
+        //computeAPI.parseInputPayload(exampleJson);
 
         sendResponse(httpExchange, response);
     }
@@ -47,7 +50,16 @@ public class FibHttpHandler implements HttpHandler {
     curl.exe -X POST http://127.0.0.1:8080/fib -d '{\"input\": \"hello\"}'
     example valid input:
     curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"csv\", \"delimiter\": \";\", \"outputType\": \"json\", \"outputSource\": \"output.json\" }' http://localhost:8080/fib
+    example valid input: 'calcFibNumbersUpTo': [1, 10, 25]}
+    curl.exe -X POST -H "Content-Type: application/json" -d '{ \"uniqueID\": \"1234\", \"inputType\": \"json\", \"delimiter\": \",\", \"outputType\": \"json\", \"outputSource\": \"output.json\", \"payloadData\": { \"calcFibNumbersUpTo\": [1, 10, 25] } }' http://localhost:8080/fib
      */
+
+    private String processInputStringForOutput(String inputString) {
+        String response = computeAPI.processInputStringForOutput(inputString);
+
+        return response;
+    }
+
     private void handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inputStream = httpExchange.getRequestBody();
 
@@ -55,11 +67,31 @@ public class FibHttpHandler implements HttpHandler {
 
         System.out.println(inputString);
 
+        String response = processInputStringForOutput(inputString);
+
+        System.out.println("response" + response);
+
+        /*
+
         Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
 
         // TODO: handle the result
+        ComputeJob job = computeAPI.createComputeJobFromInputPayload(result.getData());
+        computeAPI.queueJob(job);
 
-        String response = result.toJSON().toString();
+        OutputPayload output = job.getOutputPayload();
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter())
+                .create();
+        String response = "";
+        try {
+            response = gson.toJson(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+         */
 
         sendResponse(httpExchange, response);
     }

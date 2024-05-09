@@ -1,11 +1,7 @@
 package org.fibsters.interfaces;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import org.fibsters.ComputeJobStatus;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import org.fibsters.InputPayloadImpl;
 
 /**
  * Handles the request and returns the response.
@@ -19,7 +15,7 @@ public interface CoordinatorComputeEngine {
     /**
      * Passes the input payload to the data storage layer to be sanitized and validated.
      */
-    Result<InputPayload> parseInputPayload(String inputPayloadString);
+    Result<InputPayloadImpl> parseInputPayload(String inputPayloadString);
 
     Result<OutputPayload> parseOutputPayload(ComputeJob completedJob);
 
@@ -39,7 +35,7 @@ public interface CoordinatorComputeEngine {
     /**
      * Creates FibCalcTasks, FibSpiralTasks, or other ComputeJobs from the inputPayload.
      */
-    ComputeJob createComputeJobFromInputPayload(InputPayload inputPayload);
+    ComputeJob createComputeJobFromInputPayload(InputPayloadImpl inputPayload);
 
     /**
      * Calls parseOutputPayload in the dataStorage layer.

@@ -1,18 +1,20 @@
 package org.fibsters;
+
 import org.fibsters.interfaces.Result;
-import org.json.JSONObject;
 
 public class SuccessResult<T> implements Result {
 
     private T data;
+    private final boolean success;
 
     public SuccessResult(T data) {
         this.data = data;
+        this.success = true;
     }
 
     @Override
     public boolean isSuccess() {
-        return true;
+        return success;
     }
 
     @Override
@@ -28,16 +30,6 @@ public class SuccessResult<T> implements Result {
     @Override
     public String getErrorMessage() {
         return null;
-    }
-
-    public JSONObject toJSON() {
-        JSONObject result = new JSONObject();
-
-        result.put("success", this.isSuccess());
-        result.put("data", this.data.toString());
-        result.put("errorMessage", "");
-
-        return result;
     }
 
 }

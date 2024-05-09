@@ -1,5 +1,0 @@
-// test.proto
-message test {
-  optional int32 result = 1;
-  required int32 errorCode = 2;
-}
