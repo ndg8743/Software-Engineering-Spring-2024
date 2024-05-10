@@ -2,16 +2,10 @@ package org.fibsters;
 
 import org.fibsters.interfaces.*;
 
-import java.util.Queue;
-
 public class CoordinatorComputeEngineImpl implements CoordinatorComputeEngine {
 
     private final DataStorageImpl dataStorage;
     private final ComputeJobPoolImpl jobPool;
-    // TODO: still needed?
-    private Queue<InputPayload> inputPayloadQueue; // allowing for async input payloads for when jobPool is busy.
-
-    private Queue<OutputPayload> outputPayloadQueue; // allowing for async output payloads for when jobPool is busy.
 
     public CoordinatorComputeEngineImpl(DataStorageImpl dataStorage) {
         this.dataStorage = dataStorage;

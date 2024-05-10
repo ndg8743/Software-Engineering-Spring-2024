@@ -59,7 +59,9 @@ public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
             jsonReader.nextNull();
             return null;
         }
+
         byte[] imageBytes = Base64.getDecoder().decode(jsonReader.nextString());
+
         return ImageIO.read(new ByteArrayInputStream(imageBytes));
     }
 

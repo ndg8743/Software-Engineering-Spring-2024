@@ -14,7 +14,6 @@ import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Arrays;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
@@ -33,8 +32,8 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     private double scaledFib;
     private double currentFib;
 
-    private static final int WIDTH = 2000;
-    private static final int HEIGHT = 2000;
+    public static final int WIDTH = 2000;
+    public static final int HEIGHT = 2000;
 
     private String fileName = "";
 
@@ -133,8 +132,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         this.maxElement = fibonacci.length - 1;
 
-
-        System.out.println("CHUNK " + this.chunk + " LENGTH " + fibonacci.length + " fib: " + Arrays.toString(fibonacci));
+        //System.out.println("CHUNK " + this.chunk + " LENGTH " + fibonacci.length + " fib: " + Arrays.toString(fibonacci));
         int centerX = WIDTH / 2;
         int centerY = HEIGHT / 2;
 
@@ -172,7 +170,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
                     throw new IllegalStateException("Unexpected value: " + this.angle);
             }
 
-            System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
+            //System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
             //System.out.println("Angle: " + angle);
             //System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
 
@@ -183,7 +181,6 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
             double scaledY = (y * scale) + (centerY);
             double scaledFib = (currentFib * scale);
 
-            //executor.submit(new FibonacciFractalGenerator.FractalDrawingTask(image, scaledX, scaledY, angle, scaledFib, currentFib));
             this.posX = scaledX;
             this.posY = scaledY;
             this.scaledFib = scaledFib;
@@ -197,12 +194,11 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     private void draw() {
-        BufferedImage image = this.outputPayload.getOutputImage(this.chunk); //image to write to
-        //TODO: do the writing that's in the legacy class
+        BufferedImage image = this.outputPayload.getOutputImage(this.chunk);
 
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.BLUE);
-        System.out.println("CHUNK " + this.chunk + " img: " + image);
+        //System.out.println("CHUNK " + this.chunk + " img: " + image);
 
         //String debugMessage = "[Fib] (Draw) - " + this.chunk;
 
@@ -260,7 +256,7 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     public void saveBuffer() {
         for (int i = 0; i < this.outputPayload.getFibCalcResultsInteger2dList().size(); i++) {
-            BufferedImage image = this.outputPayload.getOutputImage(i); //image to write to
+            BufferedImage image = this.outputPayload.getOutputImage(i);
 
             this.fileName = "fib" + i;
 

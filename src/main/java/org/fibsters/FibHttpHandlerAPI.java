@@ -17,7 +17,6 @@ public class FibHttpHandlerAPI {
         port = givenPort;
     }
 
-    // start
     public void start() throws IOException {
         this.api = new CoordinatorComputeEngineImpl(new DataStorageImpl());
 
