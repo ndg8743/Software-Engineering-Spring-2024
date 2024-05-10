@@ -25,7 +25,6 @@ import org.fibsters.interfaces.PayloadData;
 import org.fibsters.interfaces.Result;
 import org.fibsters.ComputeInputServiceGrpc;
 
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,7 +33,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 
 public class CliClient {
 
@@ -65,7 +63,9 @@ public class CliClient {
             System.out.println("Starting the compute job client...");
 
             System.out.println("Set Network Request Type (POST/GRPC), POST by default");
+
             String response = scanner.nextLine();
+
             if ("GRPC".equalsIgnoreCase(response)) {
                 CliClient.networkRequestType = "GRPC";
             }
@@ -88,8 +88,11 @@ public class CliClient {
                 if (jobId != null) {
                     doJob(jobId);
                 }
+
                 System.out.println("Do you want to start another job? (yes/no)");
+
                 response = scanner.nextLine();
+
                 if (!"yes".equalsIgnoreCase(response)) {
                     break;
                 }
@@ -141,6 +144,7 @@ public class CliClient {
 
     public static void doJob(String jobId) {
         boolean completed = false;
+
         while (!completed) {
             System.out.println("Checking job status for ID: " + jobId);
 
@@ -163,9 +167,11 @@ public class CliClient {
                 case COMPLETED:
                     completed = true;
                     System.out.println("Job completed. Fetching results...");
-                    //String resultJson = "{ \"uniqueID\": \"" + jobId + "\", \"directive\": \"GET_JOB_BY_ID\" }";
+
                     Result<OutputPayloadImpl> result = getJobById(jobId);
+
                     handleCompletedResults(result);
+
                     System.out.println("Job result: " + result.getData().getStatus().name());
                     break;
                 default:

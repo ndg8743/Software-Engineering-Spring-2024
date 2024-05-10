@@ -148,30 +148,12 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                 jobClone.setStartIndex(start);
                 jobClone.setEndIndex(end);
                 jobClone.setChunk(i);
-                if (jobClone instanceof FibSpiralComputeEngineImpl) {
-                    System.out.println("Job Pool: Chunk" + i + " fib" + jobClone.getTotalSize(i));
-                }
-
 
                 futureFibTasks[threadCount++] = executor.submit(jobClone);
             }
 
         }
-        System.out.println("Thread count: " + threadCount);
-        /*int threadGroupSize = Math.round(job.getTotalSize() / numThreads); // 90 fib numbers / 4 threads = 22.5
-        for (int i = numThreads; i >= 0; i--) {
-            int start = i * threadGroupSize;
-            int end = (i + 1) * threadGroupSize;
-
-            if (i == numThreads - 1) { // threadgroup didnt divide evenly so pick up the remaining elements
-                end = job.getTotalSize();
-            }
-            // important to set the start and end indices for the job so that it knows what to calculate
-            job.setStartIndex(start);
-            job.setEndIndex(end);
-            futureFibTasks[i] = executor.submit(job);
-        }*/
-        //executor.execute(job);
+        //System.out.println("Thread count: " + threadCount);
     }
 
     private int[] handleThreadPooling(int[] jobs, int numThreads) {

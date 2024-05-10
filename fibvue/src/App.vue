@@ -41,6 +41,9 @@
 
 <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   data() {
@@ -86,12 +89,15 @@ export default {
         this.jobStatus = payload.data.status;
         if (this.jobStatus === 'COMPLETED') {
           this.fetchJobResults();
+
+          toast.success('Fibonacci job completed!');
         } if (this.jobStatus === 'PENDING' || this.jobStatus === 'RUNNING') {
           this.jobResult = payload.data;
           setTimeout(this.pollJobStatus, 1000); // Poll every second
         }
       } catch (error) {
         console.error('Error polling job status:', error);
+        toast.error("Error polling job status: " + error);
       }
     },
     async fetchJobResults() {

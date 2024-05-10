@@ -5,7 +5,6 @@ import org.fibsters.interfaces.InputPayload;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
 
@@ -16,29 +15,12 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     private InputPayload inputPayload; // used for reference potentially(has uuid)
     private int chunk;
     private OutputPayloadImpl outputPayload;
-    private static Map<Integer, Integer> memoizationMap; // cache
 
     public FibCalcComputeEngineImpl(OutputPayloadImpl outputPayload) {
         this.status = ComputeJobStatus.UNSTARTED;
         this.startIndex = 0;
         this.endIndex = 10;
         this.outputPayload = outputPayload;
-
-        memoizationMap = new ConcurrentHashMap<>();
-    }
-
-    @Override
-    public FibCalcComputeEngineImpl clone() {
-        FibCalcComputeEngineImpl clone = new FibCalcComputeEngineImpl(this.outputPayload);
-
-        clone.setStatus(this.status);
-        clone.setStartIndex(this.startIndex);
-        clone.setEndIndex(this.endIndex);
-        clone.setInputPayload(this.inputPayload);
-        clone.setOutputPayload(this.outputPayload);
-        clone.setChunk(this.chunk);
-
-        return clone;
     }
 
     @Override
@@ -46,7 +28,6 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
         this.chunk = chunk;
     }
 
-    // set/get chunk
     @Override
     public int getChunk() {
         return chunk;
@@ -101,9 +82,6 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
 
     @Override
     public void run() {
-        // TODO: report failure if that's possible
-        // TODO: Do proper chunking and offsetting, need to hold off on implementation for now
-
         status = ComputeJobStatus.PENDING;
 
         int total = endIndex - startIndex;
@@ -135,12 +113,6 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
             for (int i = 0; i < total; i++) {
                 fibonacci[i] = memoizationMap.get(i);
             }
-/*            fibonacci[1] = calculateNthFibonacci(startIndex + 1);
-
-            for (int i = startIndex + 2; i < endIndex; i++) {
-                fibonacci[i - startIndex] = fibonacci[i - 1 - startIndex] + fibonacci[i - 2 - startIndex];
-                //System.err.println(fibonacci[i-startIndex]);
-            }*/
         }
 
         outputPayload.setFibCalcResults(this.chunk, fibonacci, startIndex, endIndex);
@@ -157,6 +129,20 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     @Override
     public void setOutputPayload(OutputPayloadImpl outputPayload) {
         this.outputPayload = outputPayload;
+    }
+
+    @Override
+    public FibCalcComputeEngineImpl clone() {
+        FibCalcComputeEngineImpl clone = new FibCalcComputeEngineImpl(this.outputPayload);
+
+        clone.setStatus(this.status);
+        clone.setStartIndex(this.startIndex);
+        clone.setEndIndex(this.endIndex);
+        clone.setInputPayload(this.inputPayload);
+        clone.setOutputPayload(this.outputPayload);
+        clone.setChunk(this.chunk);
+
+        return clone;
     }
 
 }

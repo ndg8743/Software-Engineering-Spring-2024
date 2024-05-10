@@ -49,8 +49,7 @@ public class OutputPayloadImpl implements OutputPayload {
         int chunks = fibCalcResults.size();
 
         for (int i = 0; i < chunks; i++) {
-            // TODO: hardcoded  and height
-            this.fibSpiralResults.add(new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB));
+            this.fibSpiralResults.add(new BufferedImage(FibSpiralComputeEngineImpl.WIDTH, FibSpiralComputeEngineImpl.HEIGHT, BufferedImage.TYPE_INT_RGB));
         }
     }
 
@@ -114,9 +113,6 @@ public class OutputPayloadImpl implements OutputPayload {
             int relativeIndex = i - startIndex;
             this.fibCalcResults.get(chunk)[i] = fibCalcSubResults[relativeIndex];
         }
-
-        System.out.println(chunk + "fibCalcResults:" + Arrays.toString(fibCalcSubResults) + " startindex: " + startIndex);
-        System.out.println("Updated Chunk: " + Arrays.toString(this.fibCalcResults.get(chunk)));
     }
 
     public List<String> toStringList() {
@@ -127,6 +123,7 @@ public class OutputPayloadImpl implements OutputPayload {
                 jsonStringList.add(Integer.toString(integer));
             }
         }
+
         return jsonStringList;
     }
 

@@ -22,10 +22,13 @@ public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpH
     public void handle(HttpExchange httpExchange) throws IOException {
         Headers headers = httpExchange.getResponseHeaders();
 
+        // CORS
         headers.set("Access-Control-Allow-Origin", "*"); // Allow all domains
         headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allowed methods
         headers.set("Access-Control-Allow-Headers", "Content-Type,Authorization"); // Allowed headers
+
         String requestMethod = httpExchange.getRequestMethod();
+
         // Check if the request method is GET
         switch (requestMethod) {
             case "GET":
@@ -42,9 +45,6 @@ public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpH
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
         String response = "get: hello world from fib handler";
-        //String exampleJson = "{'calcFibNumbersUpTo': [1, 10, 25]}";
-
-        //computeAPI.parseInputPayload(exampleJson);
 
         sendResponse(httpExchange, response);
     }
@@ -71,33 +71,7 @@ public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpH
 
         String inputString = new String(inputStream.readAllBytes());
 
-        System.out.println(inputString);
-
         String response = processInputStringForOutput(inputString);
-
-        System.out.println("response" + response);
-
-        /*
-
-        Result<InputPayload> result = computeAPI.parseInputPayload(inputString);
-
-        // TODO: handle the result
-        ComputeJob job = computeAPI.createComputeJobFromInputPayload(result.getData());
-        computeAPI.queueJob(job);
-
-        OutputPayload output = job.getOutputPayload();
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(BufferedImage.class, new BufferedImageTypeAdapter())
-                .create();
-        String response = "";
-        try {
-            response = gson.toJson(output);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-         */
 
         sendResponse(httpExchange, response);
     }

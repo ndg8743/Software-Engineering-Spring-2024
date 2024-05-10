@@ -93,8 +93,6 @@ public class InputPayloadImpl implements InputPayload {
     // used to split up the work for the compute engines
     @Override
     public int getTotalSize() {
-        // TODO: Make this consider the input type
-        // Have to calculate based on if it's csv or json, what fields ect
         return this.payloadData.calcFibNumbersUpTo.length;
     }
 
