@@ -11,6 +11,8 @@ By: Nathan Gopee, CJ Jenks, and Mike Manzi
 - [Example Input](#example-input)
 - [Example Output](#example-output)
 - [Prototype Code](#prototype-code)
+- [Benchmark Testing and Optimization](#benchmark-testing-and-optimization)
+- [Restrospective](#restrospective)
 
 ## Project Description
 This project is a web application that will generate a fractal image based on the Fibonacci sequence. The user will input a number, and the application will generate a fractal construction data and raw image based on the Fibonacci sequence up to that number. Clientside, the application will allow for scaling and panning of the Fibonacci fractal.
