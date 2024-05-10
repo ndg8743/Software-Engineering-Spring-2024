@@ -74,7 +74,7 @@ public class FibCalcComputeEngineImpl implements FibCalcComputeEngine {
     }
 
     @Override
-    public int getTotalSize() {
+    public int getTotalSize(int chunk) {
         int sum = 0;
 
         for (int num : inputPayload.getPayloadDataParsed()) {

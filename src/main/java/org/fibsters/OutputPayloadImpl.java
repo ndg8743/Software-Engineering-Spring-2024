@@ -8,8 +8,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OutputPayloadImpl implements OutputPayload {
+
     private String uniqueID;
     private int index;
     private InputPayloadImpl inputPayload;
@@ -17,7 +19,7 @@ public class OutputPayloadImpl implements OutputPayload {
     private List<int[]> fibCalcResults;
 
     // need the output for the spiral as a variable here
-    private BufferedImage fibSpiralResult;
+    private CopyOnWriteArrayList<BufferedImage> fibSpiralResults;
     private List<List<String>> fibCalcStrings;
 
     public OutputPayloadImpl(int index, InputPayloadImpl inputPayload, ComputeJobStatus status) {
@@ -32,7 +34,7 @@ public class OutputPayloadImpl implements OutputPayload {
 
         // need to parse the height/width
         // temporarily set it as whatever
-        this.fibSpiralResult = new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB);
+        this.fibSpiralResults = new CopyOnWriteArrayList<>();
 
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcResults.add(new int[payloadDataParsed[i]]);
@@ -42,6 +44,13 @@ public class OutputPayloadImpl implements OutputPayload {
 
         for (int i = 0; i < totalSize; i++) {
             this.fibCalcStrings.add(new ArrayList<>(payloadDataParsed.length));
+        }
+
+        int chunks = fibCalcResults.size();
+
+        for (int i = 0; i < chunks; i++) {
+            // TODO: hardcoded  and height
+            this.fibSpiralResults.add(new BufferedImage(2000, 2000, BufferedImage.TYPE_INT_RGB));
         }
     }
 
@@ -55,8 +64,8 @@ public class OutputPayloadImpl implements OutputPayload {
     }
 
     @Override
-    public BufferedImage getOutputImage() {
-        return this.fibSpiralResult;
+    public BufferedImage getOutputImage(int chunk) {
+        return this.fibSpiralResults.get(chunk);
     }
 
     @Override
@@ -131,7 +140,7 @@ public class OutputPayloadImpl implements OutputPayload {
         outputPayload.setUniqueID(this.uniqueID);
         outputPayload.setIndex(this.index);
         outputPayload.fibCalcResults = this.fibCalcResults;
-        outputPayload.fibSpiralResult = this.fibSpiralResult;
+        outputPayload.fibSpiralResults = this.fibSpiralResults;
         outputPayload.fibCalcStrings = this.fibCalcStrings;
 
         return outputPayload;

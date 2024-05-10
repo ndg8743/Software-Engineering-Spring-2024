@@ -12,7 +12,7 @@ public interface ComputeJob extends Runnable {
 
     void setStatus(ComputeJobStatus status);
 
-    int getTotalSize();
+    int getTotalSize(int chunk);
 
     void setStartIndex(int startIndex);
 
