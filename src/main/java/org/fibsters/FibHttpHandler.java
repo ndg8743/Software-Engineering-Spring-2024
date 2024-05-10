@@ -1,5 +1,6 @@
 package org.fibsters;
 
+import com.sun.net.httpserver.Headers;
 import org.fibsters.ComputeInputServiceGrpc.ComputeInputServiceImplBase;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -19,6 +20,11 @@ public class FibHttpHandler extends ComputeInputServiceImplBase implements HttpH
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        Headers headers = httpExchange.getResponseHeaders();
+
+        headers.set("Access-Control-Allow-Origin", "*"); // Allow all domains
+        headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Allowed methods
+        headers.set("Access-Control-Allow-Headers", "Content-Type,Authorization"); // Allowed headers
         String requestMethod = httpExchange.getRequestMethod();
         // Check if the request method is GET
         switch (requestMethod) {
