@@ -84,7 +84,7 @@ This project is a web application that will generate a fractal image based on th
 4. **Benchmark Results:**
    - Reran integration tests to evaluate performance improvements.
    - Optimized compute engine showcased significantly faster execution times and stable memory usage compared to the initial implementation.
-   - Integration tests validated that requests were processed within an acceptable duration, meeting performance requirements.
+   - Integration tests validated that requests were processed within an acceptable duration and met performance requirements.
 
 ## Benchmark Results
 
@@ -98,17 +98,17 @@ This project is a web application that will generate a fractal image based on th
 [Final Requirements](SE_Final_Project.pdf)
 ## Issue
 The Vue.js application is not implemented with gRPC  
-### Why? The Vue.js application is currently using HTTP requests (axios) to communicate with the server. 
-The Vue.js application is using axios, a promise-based HTTP client, to send HTTP requests to the server. This is evident in the startComputeJob, pollJobStatus, and fetchJobResults methods in the App.vue file. While HTTP/axios is a common choice for client-server communication in web applications, it does not utilize the benefits of gRPC such as efficient binary serialization, HTTP/2 protocol advantages, and full-duplex streaming.
+### Why? The Vue.js application currently uses HTTP requests (axios) to communicate with the server. 
+The Vue.js application uses axios, a promise-based HTTP client, to send HTTP requests to the server. This is evident in the startComputeJob, pollJobStatus, and fetchJobResults methods in the App.vue file. While HTTP/axios is a common choice for client-server communication in web applications, it does not utilize the benefits of gRPC such as efficient binary serialization, HTTP/2 protocol advantages, and full-duplex streaming.
 ### Why? We weren’t familiar with gRPC or how to use it in a Vue.js application.  
-Implementing gRPC in a Vue.js application requires knowledge of gRPC concepts, protobufs, and how to set up a gRPC client in JavaScript. We maybe just are unexperienced with gRPC usage in JavaScript.
+Implementing gRPC in a Vue.js application requires knowledge of gRPC concepts, protobufs, and how to set up a gRPC client in JavaScript. We also may just be inexperienced with gRPC usage in JavaScript.
 ### Why? The project requirements did not necessitate the use of gRPC.  
-The decision to use gRPC or HTTP could be influenced by various project requirements or constraints such as the need for real-time communication, the complexity of the data structures being transmitted, the need for low latency, and the supported technologies of the server and client platforms. The requirements or constraints did not necessitate the use of gRPC, and to be honest HTTP/axios was better at the moment for its simplicity and ease of use.
+The decision to use gRPC or HTTP could be influenced by various project requirements or constraints, such as the need for real-time communication, the complexity of the transmitted data structures, the need for low latency, and the supported technologies of the server and client platforms. The requirements or constraints did not necessitate the use of gRPC, and to be honest, HTTP/axios was better at the moment for its simplicity and ease of use.
 ### Why? The existing server-side implementation might not support gRPC.  
-The server-side implementation needs to support gRPC for the Vue.js application to use it. If the server-side implementation is using technologies that do not support gRPC or if it is not set up to handle gRPC requests, we would not be able to use gRPC in the Vue.js application. In this case, the server-side implementation is using Java and gRPC, so this is not a limiting factor.
-### Why? The benefits of using gRPC may not outweigh the time of implementing it.  
-In-depth explanation: Mike was tired really didn’t want too. Implementing gRPC in the Vue.js application would require significant changes to the codebase and could introduce new complexities and challenges. Mike would need to weigh the benefits of using gRPC, such as improved performance and efficiency, against these costs. If the benefits do not outweigh the costs, it would be rational to continue using HTTP/axios.
+The server-side implementation needs to support gRPC for the Vue.js application to use it. If the server-side implementation uses technologies that do not support gRPC or are not set up to handle gRPC requests, we cannot use gRPC in the Vue.js application. In this case, the server-side implementation uses Java and gRPC, so this is not a limiting factor.
+### Why? The benefits of using gRPC may not outweigh the time required to implement it.  
+Mike was tired and really didn’t want to. Implementing gRPC in the Vue.js application would require significant changes to the codebase and could introduce new complexities and challenges. Mike would need to weigh the benefits of using gRPC, such as improved performance and efficiency, against these costs. If the benefits do not outweigh the costs, it would be rational to continue using HTTP/axios.
 ## Actionable Change
-To address this issue, we could learn about gRPC and how to use it in a Vue.js application. They could then refactor the startComputeJob, pollJobStatus, and fetchJobResults methods to use a gRPC client instead of axios. This would also involve updating the server-side implementation to handle the gRPC requests from the Vue.js application. But we should also consider the project requirements and constraints and evaluate whether the benefits of using gRPC outweigh the time it would take.
+To address this issue, we could learn about gRPC and how to use it in a Vue.js application. They could then refactor the startComputeJob, pollJobStatus, and fetchJobResults methods to use a gRPC client instead of axios. This would also involve updating the server-side implementation to handle the gRPC requests from the Vue.js application. However, we should also consider the project requirements and constraints and evaluate whether the benefits of using gRPC outweigh the time it would take.
 
 
