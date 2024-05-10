@@ -2,6 +2,9 @@
 Project for a Software Engineering course at SUNY New Paltz
 By: Nathan Gopee, CJ Jenks, and Mike Manzi
 
+### Front End
+![image](Final_Prod.png)
+
 ## Table of Contents
 - [Project Description](#project-description)
 - [System Diagram](#system-diagram)
@@ -90,6 +93,7 @@ This project is a web application that will generate a fractal image based on th
 ![image](https://github.com/ndg8743/Software-Engineering-Spring-2024/assets/73437724/e258108a-ef9e-4ed4-a88b-629aba15e762)
 
 # Restrospective
+[Final Requirements](SE_Final_Project.pdf)
 ## Issue
 The Vue.js application is not implemented with gRPC  
 ### Why? The Vue.js application is currently using HTTP requests (axios) to communicate with the server. 
