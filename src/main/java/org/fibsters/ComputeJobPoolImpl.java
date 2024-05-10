@@ -132,29 +132,29 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         int[] threadsPerSubjob = this.handleThreadPooling(subJobs, numThreads);
         int threadCount = 0;
 
-            for (int i = 0; i < threadsPerSubjob.length; i++) {
-                int threadGroupSize = subJobs[i] / threadsPerSubjob[i];
+        for (int i = 0; i < threadsPerSubjob.length; i++) {
+            int threadGroupSize = subJobs[i] / threadsPerSubjob[i];
 
-                for (int j = 0; j < threadsPerSubjob[i]; j++) {
-                    int start = j * threadGroupSize;
-                    int end = (j + 1) * threadGroupSize;
+            for (int j = 0; j < threadsPerSubjob[i]; j++) {
+                int start = j * threadGroupSize;
+                int end = (j + 1) * threadGroupSize;
 
-                    if (j == threadsPerSubjob[i] - 1) { // threadgroup didnt divide evenly so pick up the remaining elements
-                        end = subJobs[i];
-                    }
-
-                    ComputeJob jobClone = job.clone();
-
-                    jobClone.setStartIndex(start);
-                    jobClone.setEndIndex(end);
-                    jobClone.setChunk(i);
-                    if (jobClone instanceof FibSpiralComputeEngineImpl) {
-                        System.out.println("Job Pool: Chunk" + i + " fib" + jobClone.getTotalSize(i));
-                    }
-
-
-                    futureFibTasks[threadCount++] = executor.submit(jobClone);
+                if (j == threadsPerSubjob[i] - 1) { // threadgroup didnt divide evenly so pick up the remaining elements
+                    end = subJobs[i];
                 }
+
+                ComputeJob jobClone = job.clone();
+
+                jobClone.setStartIndex(start);
+                jobClone.setEndIndex(end);
+                jobClone.setChunk(i);
+                if (jobClone instanceof FibSpiralComputeEngineImpl) {
+                    System.out.println("Job Pool: Chunk" + i + " fib" + jobClone.getTotalSize(i));
+                }
+
+
+                futureFibTasks[threadCount++] = executor.submit(jobClone);
+            }
 
         }
         System.out.println("Thread count: " + threadCount);
