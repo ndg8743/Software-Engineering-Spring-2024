@@ -200,7 +200,7 @@ public class CliClient {
             }
 
             for (int i = 0; i < fibCalcResults.size(); i++) {
-                saveImage(outputPayload.getOutputImage(i), userSpecifiedFileName + ".png");
+                saveImage(outputPayload.getOutputImage(i), userSpecifiedFileName + i + ".png");
             }
         }
     }
