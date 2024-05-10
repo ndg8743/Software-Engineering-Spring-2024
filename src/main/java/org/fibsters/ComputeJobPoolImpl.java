@@ -130,7 +130,6 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
         int[] subJobs = job.getInputPayload().getPayloadDataParsed(); // ex [1, 10, 25]
 
         int[] threadsPerSubjob = this.handleThreadPooling(subJobs, numThreads);
-
         int threadCount = 0;
 
         for (int i = 0; i < threadsPerSubjob.length; i++) {
@@ -149,13 +148,16 @@ public class ComputeJobPoolImpl implements ComputeJobPool {
                 jobClone.setStartIndex(start);
                 jobClone.setEndIndex(end);
                 jobClone.setChunk(i);
+                if (jobClone instanceof FibSpiralComputeEngineImpl) {
+                    System.out.println("Job Pool: Chunk" + i + " fib" + jobClone.getTotalSize(i));
+                }
+
 
                 futureFibTasks[threadCount++] = executor.submit(jobClone);
             }
+
         }
-
         System.out.println("Thread count: " + threadCount);
-
         /*int threadGroupSize = Math.round(job.getTotalSize() / numThreads); // 90 fib numbers / 4 threads = 22.5
         for (int i = numThreads; i >= 0; i--) {
             int start = i * threadGroupSize;

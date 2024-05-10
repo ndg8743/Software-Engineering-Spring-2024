@@ -2,6 +2,7 @@ package org.fibsters;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.awt.image.BufferedImage;
@@ -54,8 +55,11 @@ public class BufferedImageTypeAdapter extends TypeAdapter<BufferedImage> {
 
     @Override
     public BufferedImage read(JsonReader jsonReader) throws IOException {
+        if (jsonReader.peek() == JsonToken.NULL) {
+            jsonReader.nextNull();
+            return null;
+        }
         byte[] imageBytes = Base64.getDecoder().decode(jsonReader.nextString());
-
         return ImageIO.read(new ByteArrayInputStream(imageBytes));
     }
 

@@ -14,11 +14,11 @@ import java.awt.Shape;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
     private ComputeJobStatus status;
-    private int[] fibonacci;
     private int startIndex;
     private int endIndex;
     private InputPayload inputPayload; // used for reference potentially(has uuid)
@@ -44,9 +44,9 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
         this.outputPayload = outputPayload;
         this.chunk = chunk;
-        this.fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
-        this.endIndex = this.fibonacci.length - 1;
-        this.maxElement = this.fibonacci.length;
+        int[] fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
+        this.endIndex = fibonacci.length - 1;
+        this.maxElement = fibonacci.length;
     }
 
     @Override
@@ -70,8 +70,8 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     @Override
-    public int getTotalSize() {
-        return this.fibonacci.length;
+    public int getTotalSize(int chunk) {
+        return this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk).length;
     }
 
     @Override
@@ -129,6 +129,12 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     private void generateValues() {
+        int[] fibonacci = this.outputPayload.getFibCalcResultsInteger2dList().get(this.chunk);
+
+        this.maxElement = fibonacci.length - 1;
+
+
+        System.out.println("CHUNK " + this.chunk + " LENGTH " + fibonacci.length + " fib: " + Arrays.toString(fibonacci));
         int centerX = WIDTH / 2;
         int centerY = HEIGHT / 2;
 
@@ -167,8 +173,8 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
             }
 
             System.out.println(currentFib + ", " + previousFib + ", " + previousPreviousFib);
-            System.out.println("Angle: " + angle);
-            System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
+            //System.out.println("Angle: " + angle);
+            //System.out.println("DeltaXY: " + deltaXY[0] + ", " + deltaXY[1]);
 
             x += deltaXY[0];
             y += deltaXY[1];
@@ -191,15 +197,16 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     private void draw() {
-        BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
+        BufferedImage image = this.outputPayload.getOutputImage(this.chunk); //image to write to
         //TODO: do the writing that's in the legacy class
 
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.BLUE);
+        System.out.println("CHUNK " + this.chunk + " img: " + image);
 
-        String debugMessage = "[Fib] (Draw) - ";
+        //String debugMessage = "[Fib] (Draw) - " + this.chunk;
 
-        System.out.println(debugMessage + " start angle: " + angle);
+        //System.out.println(debugMessage + " start angle: " + angle);
 
         synchronized (image) {
             // draw a dot at the center of the image
@@ -212,28 +219,28 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
 
                 graphics.setColor(Color.GRAY);
 
-                System.out.println(debugMessage + " <gray> " + "arcX: " + arcX + ", arcY: " + arcY);
+                //System.out.println(debugMessage + " <gray> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 90) {
                 arcX = posX;
                 arcY = posY;
 
                 graphics.setColor(Color.WHITE);
 
-                System.out.println(debugMessage + " <white> " + "arcX: " + arcX + ", arcY: " + arcY);
+                // System.out.println(debugMessage + " <white> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 180) {
                 arcX = posX;
                 arcY = posY - scaledFib;
 
                 graphics.setColor(Color.ORANGE);
 
-                System.out.println(debugMessage + " <orange> " + "arcX: " + arcX + ", arcY: " + arcY);
+                //System.out.println(debugMessage + " <orange> " + "arcX: " + arcX + ", arcY: " + arcY);
             } else if (angle == 270) {
                 arcX = posX - scaledFib;
                 arcY = posY - scaledFib;
 
                 graphics.setColor(Color.GREEN);
 
-                System.out.println(debugMessage + " <green> " + "arcX: " + arcX + ", arcY: " + arcY);
+                //System.out.println(debugMessage + " <green> " + "arcX: " + arcX + ", arcY: " + arcY);
             }
 
             Shape shape = new BigIntRectangle(BigIntUtil.toBigInt(posX), BigIntUtil.toBigInt(posY), BigIntUtil.toBigInt(scaledFib), BigIntUtil.toBigInt(scaledFib));
@@ -252,13 +259,13 @@ public class FibSpiralComputeEngineImpl implements FibSpiralComputeEngine {
     }
 
     public void saveBuffer() {
-        BufferedImage image = this.outputPayload.getOutputImage(); //image to write to
+        for (int i = 0; i < this.outputPayload.getFibCalcResultsInteger2dList().size(); i++) {
+            BufferedImage image = this.outputPayload.getOutputImage(i); //image to write to
 
-        if (this.fileName.isEmpty()) {
-            this.fileName = "fib" + this.chunk;
+            this.fileName = "fib" + i;
+
+            saveImage(image, fileName + ".png");
         }
-
-        saveImage(image, fileName + ".png");
     }
 
     public void saveImage(BufferedImage image, String fileName) {
